@@ -27,3 +27,12 @@ Graphical Interface (GTK):
 - Hello World example with explanations: https://developer.gnome.org/gtkmm-tutorial/stable/sec-helloworld.html.en
 
 - GTKMM Docs: https://www.gtkmm.org/en/documentation.shtml
+
+
+### Modules & the UI
+This is the structure of the UI
+- One `Window`
+    - Contains one `Grid`
+        - Which contains multiple `Frame`s. Each `Frame` is a Module.
+            - Each `Frame` contains one `Box`
+                - Each `Box` contains any number of other components, like `Button`s, `Label`s, etc. 
