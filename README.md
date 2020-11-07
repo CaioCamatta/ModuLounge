@@ -24,6 +24,6 @@ Alternatively, you can use `make` (preferred):
 Graphical Interface (GTK):
 - Hello World example: https://www.gtk.org/docs/getting-started/hello-world/
 
-- Hello World example with explanations: https://developer.gnome.org/gtkmm-tutorial/stable/sec-basics-simple-example.html.en
+- Hello World example with explanations: https://developer.gnome.org/gtkmm-tutorial/stable/sec-helloworld.html.en
 
 - GTKMM Docs: https://www.gtkmm.org/en/documentation.shtml
