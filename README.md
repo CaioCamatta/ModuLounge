@@ -33,6 +33,6 @@ Graphical Interface (GTK):
 This is the structure of the UI
 - One `Window`
     - Contains one `Grid`
-        - Which contains multiple `Frame`s. Each `Frame` is a Module.
+        - Which contains multiple `Frame`s. A `Frame` represents a Module.
             - Each `Frame` contains one `Box`
-                - Each `Box` contains any number of other components, like `Button`s, `Label`s, etc. 
+                - Each `Box` contains any number of other components, like `Button`s, `Label`s, etc. Your components go in this `Box`.

@@ -2,7 +2,7 @@
 #define SAMPLEMODULE_H
 
 #include <gtkmm.h>
-#include "module.h"
+#include "../module.h"
 class SampleModule : public Module
 {
 public:

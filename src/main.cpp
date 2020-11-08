@@ -1,5 +1,5 @@
 #include <gtkmm.h>
-#include "sampleModule.h"
+#include "modules/sampleModule.h"
 #include "module.h"
 
 int main(int argc, char *argv[])
