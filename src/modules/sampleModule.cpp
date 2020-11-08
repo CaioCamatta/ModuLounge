@@ -2,18 +2,34 @@
 #include <gtkmm.h>
 #include <iostream>
 
+/* Creates custom widgets (like buttons) for the custom module.
+This basically expands upon the parent Module. */
 void SampleModule::populateModule()
 {
-    std::cout << "Start populating custom component" << std::endl;
+    std::cout << "Start populating custom Module" << std::endl;
 
-    this->button = Gtk::Button("Btn");
-    this->button.show();
+    // Create a button, with label "Press Me"
+    this->button = Gtk::Button("Button");
 
-    this->box.pack_start(button);
-    this->box.set_border_width(20);
-    this->box.show(); // Show once box is ready
+    // When the button receives the "clicked" signal, it will call the
+    // on_button_clicked() method defined below.
+    this->button.signal_clicked().connect(sigc::mem_fun(*this,
+                                                        &SampleModule::on_button_clicked));
 
-    this->frame.add(box);
+    // Add Button to our Box (the Box holds all the widgets of this Module)
+    // Shrink Widget to its size, add 0 padding
+    this->box.pack_start(button, Gtk::PACK_SHRINK,0);
 
-    std::cout << "Finished populating custom component" << std::endl;
+    // Create a second button to demonstrate how multiple widgets can be added to Box
+    this->button2 = Gtk::Button("Press Me 2");
+    this->button2.signal_clicked().connect(sigc::mem_fun(*this,
+                                                         &SampleModule::on_button_clicked));
+    this->box.pack_start(button2);
+
+    std::cout << "Finished populating custom Module" << std::endl;
+}
+
+void SampleModule::on_button_clicked()
+{
+    std::cout << "Button was pressed." << std::endl;
 }
