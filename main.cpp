@@ -1,4 +1,5 @@
 #include <gtkmm.h>
+#include "sampleModule.h"
 #include "module.h"
 
 int main(int argc, char *argv[])
@@ -16,7 +17,8 @@ int main(int argc, char *argv[])
             2. Show() the Frame that contains the actual thigns in the module
             3. Add the frame to the main grid 
     */
-    Module module;
+    SampleModule module("Sample Module",100, 100);
+    module.populateModule();
     window.add(module.frame);
 
     window.show_all_children();

@@ -2,25 +2,28 @@
 #include <gtkmm.h>
 #include <iostream>
 
-Module::Module()
+Module::Module(std::string name, int width, int height)
 {
     std::cout << "Start creation of custom component" << std::endl;
-
-    this->button = Gtk::Button("Btn");
-    this->button.show();
-
+    this->name = name;
+    this->width = width;
+    this->height = height;
     this->box = Gtk::Box();
-    this->box.pack_start(button);
-    this->box.set_border_width(20);
-    this->box.show(); // Show once box is ready
 
-    /* Set the frames label */
+    /* Setup frame */
     this->frame = Gtk::Frame();
-    this->frame.set_label("Frame Widget");
+    this->frame.set_label(name);
     this->frame.set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
     this->frame.set_border_width(10);
 
-    this->frame.add(box);
-
     std::cout << "Finished creating custom component" << std::endl;
+}
+
+int Module::getHeight()
+{
+    return this->height;
+}
+int Module::getWidth()
+{
+    return this->width;
 }
