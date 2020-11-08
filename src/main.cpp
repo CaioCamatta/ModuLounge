@@ -5,6 +5,8 @@
 
 int main(int argc, char *argv[])
 {
+    
+    // ------------- UI -----------------
     auto app =
         Gtk::Application::create(argc, argv,
                                  "group54.moduLounge");
