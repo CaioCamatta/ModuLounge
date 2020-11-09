@@ -14,6 +14,7 @@ public:
     virtual ~Module() = 0;
     int getWidth();
     int getHeight();
+    std::string getName();
     virtual void populateModule() = 0; // Add new stuff to the module.
     Gtk::Frame frame; // TODO: make this protected and create getters/setters
     Gtk::Box box; // TODO: make this protected and create getters/setters

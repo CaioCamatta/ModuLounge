@@ -41,3 +41,7 @@ int Module::getWidth()
 {
     return this->width;
 }
+
+std::string Module::getName() {
+    return this->name;
+}
