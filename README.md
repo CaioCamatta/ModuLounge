@@ -4,9 +4,13 @@ The ModuLounge is a Raspberry Pi application to turn a screen into a smart-ish l
 
 ## Installation & Execution
 
-First, Install GTKMM
+Use Linux preferably.
 
-    apt-get install libgtkmm-3.0-dev
+First, Install GTKMM and other libraries required
+
+    sudp apt-get install libgtkmm-3.0-dev
+    sudo apt-get install libjsoncpp-dev
+    sudo apt-get install libcurl4 libcurl4-openssl-dev -y
 
 To run the app, use `make`:
 
