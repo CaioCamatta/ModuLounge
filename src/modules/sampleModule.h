@@ -10,6 +10,7 @@ public:
     // Use parent constructor. You may not need to customize this constructor at all.
     // New widgets (buttons, text, etc) are supposed to be created in populateModule(), not the constructor.
     SampleModule(std::string name, int width, int height) : Module(name, width, height){};
+    ~SampleModule();
 
     void populateModule(); // Add new stuff to the module.
 

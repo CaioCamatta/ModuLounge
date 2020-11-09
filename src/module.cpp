@@ -28,6 +28,10 @@ Module::Module(std::string name, int width, int height)
     std::cout << "Finished creating Module" << std::endl;
 }
 
+Module::~Module() {
+
+}
+
 int Module::getHeight()
 {
     return this->height;

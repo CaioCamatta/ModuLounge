@@ -1,7 +1,10 @@
-#include <gtkmm.h>
-#include "modules/sampleModule.h"
-#include "module.h"
 #include <iostream>
+#include <gtkmm.h>
+#include <vector>
+#include <memory>
+#include "modules/sampleModule.h"
+#include "modules/weather.h"
+#include "module.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,17 +25,21 @@ int main(int argc, char *argv[])
     /*  This is how you add a module:
             1. Create the Module
             2. Show() the Frame that contains the actual thigns in the module
-            3. Add the frame to the main grid 
+            3. Add the frame to the main grid
     */
-    // SampleModule is a basic module with two buttons that print to the terminal when clicked
-    SampleModule mySampleModule("Sample Module", 100, 100);
-    mySampleModule.populateModule();
-    grid.add(mySampleModule.frame);
 
-    // SampleModule2 is a baxic module with two buttons that print to the terminal when clicked
-    SampleModule mySampleModule2("Sample Module 2", 100, 50);
-    mySampleModule2.populateModule();
-    grid.add(mySampleModule2.frame);
+    std::vector<std::unique_ptr<Module>> modules;
+
+    modules.emplace_back(new SampleModule("Sample Module", 100, 100));
+    modules.emplace_back(new Weather("Toronto", "Sample Module 2", 100, 50));
+
+
+
+    for(std::unique_ptr<Module>& i : modules) {
+        i->populateModule();
+        grid.add(i->frame);
+    }
+
 
     /* Once everything all the Boxes, Buttons, etc have been created and linked,
     we add the Grid to the Window and show all children */

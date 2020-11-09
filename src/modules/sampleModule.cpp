@@ -2,6 +2,10 @@
 #include <gtkmm.h>
 #include <iostream>
 
+SampleModule::~SampleModule() {
+
+}
+
 /* Creates custom widgets (like buttons) for the custom module.
 This basically expands upon the parent Module. */
 void SampleModule::populateModule()
