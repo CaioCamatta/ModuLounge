@@ -8,6 +8,7 @@ using namespace std;
 
 Json::Value fetchWeather(string city);
 
+// writer for libcurl API call
 static std::size_t writer(
         const char* in,
         std::size_t size,
@@ -19,6 +20,7 @@ static std::size_t writer(
     return size * num;
 }
 
+// Display the weather of the specified city upon creation
 void Weather::initializeWeather(string city) {
     Json::Value data = fetchWeather(city);
     if (!data["name"]) {
@@ -31,6 +33,7 @@ Weather::~Weather() {
 
 }
 
+// Call the OpenWeatherMap API and return it's results as a Json Value
 Json::Value fetchWeather(string city) {
     const string API_KEY = "44a9b4cb7355f31110fed676da845337";
     const string url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + API_KEY;

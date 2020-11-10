@@ -1,5 +1,5 @@
-#ifndef CPP_WORKSPACE_WEATHER_H
-#define CPP_WORKSPACE_WEATHER_H
+#ifndef WEATHER_H
+#define WEATHER_H
 
 #include <iostream>
 #include "../module.h"
@@ -20,4 +20,4 @@ class Weather : public Module {
 };
 
 
-#endif //CPP_WORKSPACE_WEATHER_H
+#endif //WEATHER_H
