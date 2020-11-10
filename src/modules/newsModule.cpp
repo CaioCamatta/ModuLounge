@@ -1,25 +1,5 @@
 #include "newsModule.h"
 
-/*
-* struct used to store all the details that should appear on the screan
-* as part of the news module
-*/
-/*NewsModule::jsonNews()
-{
-    std::string description;
-    std::string date;
-    std::string source;
-    std::string title;
-    std::string content;
-
-}*/
-
-/*NewsModule::newsData()
-{
-    char *data;
-    size_t size;
-}*/
-
 size_t NewsModule::saveData(void *contents, size_t size, size_t nmemb, void *userp)
 {
 
