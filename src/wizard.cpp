@@ -5,6 +5,8 @@
 #include "wizard.h"
 #include "module.h"
 #include "modules/weather.h"
+#include "modules/sport.h"
+
 using namespace std;
 
 vector<unique_ptr<Module>> created_modules;
@@ -17,7 +19,7 @@ void removeModule(const string& module);
 string lowercase(string& str) { transform(str.begin(), str.end(), str.begin(), ::tolower); return str;}
 
 void Wizard::userSetup() {
-    vector<string> module_names = {"weather", "calendar"};
+    vector<string> module_names = {"weather", "calendar", "sport"};
     bool done = false;
     bool exit = false;
     cout << endl;
@@ -41,7 +43,10 @@ void Wizard::userSetup() {
             setupModule("weather", 1, module_names);
         } else if (input == "calendar") {
             setupModule("calendar", 2, module_names);
-        } else if (input == "exit") {
+        } else if (input == "sport") {
+            setupModule("sport", 3, module_names);
+        }
+        else if (input == "exit") {
             exit = true;
             done = true;
         } else if (input == "done") {
@@ -98,6 +103,9 @@ void Wizard::setupModule(const string& module, int setup, vector<string>& module
                 case 2:
                     //created_modules.emplace_back(setupCalendar(module));
                     break;
+                case 3:
+                    created_modules.emplace_back(setupSport(module));
+                    break;
                 default:
                     break;
             }
@@ -115,6 +123,13 @@ unique_ptr<Module> Wizard::setupWeather(string name) {
     cout << "Enter the city (optional: add a country code, e.g. 'London, CA'): ";
     getline(cin, city);
     return unique_ptr<Module>(new Weather(lowercase(city), name, 100, 50));
+}
+
+unique_ptr<Module> Wizard::setupSport(string name) {
+    string sport;
+    cout << "Enter the sport you would like to see articles for (E.g. basketball, football, soccer, tennis...): ";
+    getline(cin, sport);
+    return unique_ptr<Module>(new Sport(lowercase(sport), name, 100, 50));
 }
 /*
 Calendar * Wizard::setupCalendar(string name) {
