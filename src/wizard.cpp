@@ -114,10 +114,10 @@ void Wizard::setupModule(const string& module, int setup, vector<string>& module
                     created_modules.emplace_back(setupCalendar(module));
                     break;
                 case 3:
-                    created_modules.emplace_back(setupNews(module));
+                    created_modules.emplace_back(setupSport(module));
                     break;
                 case 4:
-                    created_modules.emplace_back(setupSport(module));
+                    created_modules.emplace_back(setupNews(module));
                     break;
                 default:
                     break;
