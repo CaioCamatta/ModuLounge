@@ -6,6 +6,7 @@
 #include "modules/weather.h"
 #include "module.h"
 #include "wizard.h"
+#include "modules/newsModule.h"
 
 int main(int argc, char *argv[])
 {
