@@ -5,6 +5,7 @@
 #include "wizard.h"
 #include "module.h"
 #include "modules/weather.h"
+#include "modules/sport.h"
 #include "modules/newsModule.h"
 using namespace std;
 
@@ -18,7 +19,7 @@ void removeModule(const string& module);
 string lowercase(string& str) { transform(str.begin(), str.end(), str.begin(), ::tolower); return str;}
 
 void Wizard::userSetup() {
-    vector<string> module_names = {"weather", "calendar", "news"};
+    vector<string> module_names = {"weather", "calendar", "sport", "news"};
     bool done = false;
     bool exit = false;
     cout << endl;
@@ -42,8 +43,10 @@ void Wizard::userSetup() {
             setupModule("weather", 1, module_names);
         } else if (input == "calendar") {
             setupModule("calendar", 2, module_names);
-        } else if (input == "news") {
+        } else if (input == "sport") {
             setupModule("news", 3, module_names);
+        } else if (input == "news") {
+            setupModule("sport", 4, module_names);
         } else if (input == "exit") {
             exit = true;
             done = true;
@@ -103,6 +106,9 @@ void Wizard::setupModule(const string& module, int setup, vector<string>& module
                 case 3:
                     created_modules.emplace_back(setupNews(module));
                     break;
+                case 4:
+                    created_modules.emplace_back(setupSport(module));
+                    break;
                 default:
                     break;
             }
@@ -120,6 +126,13 @@ unique_ptr<Module> Wizard::setupWeather(string name) {
     cout << "Enter the city (optional: add a country code, e.g. 'London, CA'): ";
     getline(cin, city);
     return unique_ptr<Module>(new Weather(lowercase(city), name, 100, 50));
+}
+
+unique_ptr<Module> Wizard::setupSport(string name) {
+    string sport;
+    cout << "Enter the sport or team you would like to see articles for (E.g. basketball, football, tennis, LA Lakers...): ";
+    getline(cin, sport);
+    return unique_ptr<Module>(new Sport(lowercase(sport), name, 100, 50));
 }
 /*
 Calendar * Wizard::setupCalendar(string name) {
