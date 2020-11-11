@@ -6,6 +6,7 @@
 #include "module.h"
 #include "modules/weather.h"
 #include "modules/calendar.h"
+#include "modules/sport.h"
 #include "modules/newsModule.h"
 using namespace std;
 
@@ -23,7 +24,7 @@ string lowercase(string& str) { transform(str.begin(), str.end(), str.begin(), :
  * Also allows for other actions such as 'help' and 'remove'
  */
 void Wizard::userSetup() {
-    vector<string> module_names = {"weather", "calendar", "news"};
+    vector<string> module_names = {"weather", "calendar", "sport", "news"};
     bool done = false;
     bool exit = false;
 
@@ -52,8 +53,10 @@ void Wizard::userSetup() {
             setupModule("weather", 1, module_names);
         } else if (input == "calendar") {
             setupModule("calendar", 2, module_names);
+        } else if (input == "sport") {
+            setupModule("sport", 3, module_names);
         } else if (input == "news") {
-            setupModule("news", 3, module_names);
+            setupModule("news", 4, module_names);
         } else if (input == "exit") {
             exit = true;
             done = true;
@@ -109,8 +112,12 @@ void Wizard::setupModule(const string& module, int setup, vector<string>& module
                     break;
                 case 2:
                     created_modules.emplace_back(setupCalendar(module));
+                    break;
                 case 3:
                     created_modules.emplace_back(setupNews(module));
+                    break;
+                case 4:
+                    created_modules.emplace_back(setupSport(module));
                     break;
                 default:
                     break;
@@ -139,11 +146,15 @@ unique_ptr<Module> Wizard::setupCalendar(string name) {
     getline(cin, prov);
     return unique_ptr<Module>(new Calendar(lowercase(prov), name, 100, 100));
 }
-
+unique_ptr<Module> Wizard::setupSport(string name) {
+    string sport;
+    cout << "Enter the sport or team you would like to see articles for (E.g. basketball, football, tennis, LA Lakers...): ";
+    getline(cin, sport);
+    return unique_ptr<Module>(new Sport(lowercase(sport), name, 100, 50));
+}
 unique_ptr<Module> Wizard::setupNews(string name) {
     return unique_ptr<Module>(new NewsModule(name, 100, 50));
 }
-
 // Accessor for the vector of all created modules
 vector<unique_ptr<Module>> & Wizard::getModules() {
     return created_modules;
