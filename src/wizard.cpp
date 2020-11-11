@@ -5,6 +5,7 @@
 #include "wizard.h"
 #include "module.h"
 #include "modules/weather.h"
+#include "modules/newsModule.h"
 using namespace std;
 
 vector<unique_ptr<Module>> created_modules;
@@ -17,7 +18,7 @@ void removeModule(const string& module);
 string lowercase(string& str) { transform(str.begin(), str.end(), str.begin(), ::tolower); return str;}
 
 void Wizard::userSetup() {
-    vector<string> module_names = {"weather", "calendar"};
+    vector<string> module_names = {"weather", "calendar", "news"};
     bool done = false;
     bool exit = false;
     cout << endl;
@@ -41,6 +42,8 @@ void Wizard::userSetup() {
             setupModule("weather", 1, module_names);
         } else if (input == "calendar") {
             setupModule("calendar", 2, module_names);
+        } else if (input == "news") {
+            setupModule("news", 3, module_names);
         } else if (input == "exit") {
             exit = true;
             done = true;
@@ -97,6 +100,8 @@ void Wizard::setupModule(const string& module, int setup, vector<string>& module
                     break;
                 case 2:
                     //created_modules.emplace_back(setupCalendar(module));
+                case 3:
+                    created_modules.emplace_back(setupNews(module));
                     break;
                 default:
                     break;
@@ -123,6 +128,9 @@ Calendar * Wizard::setupCalendar(string name) {
     getline(cin, prov);
     return Calendar(lowercase(prov), name, -1, -1);
 }*/
+unique_ptr<Module> Wizard::setupNews(string name) {
+    return unique_ptr<Module>(new NewsModule(name, 100, 50));
+}
 
 vector<unique_ptr<Module>> & Wizard::getModules() {
     return created_modules;

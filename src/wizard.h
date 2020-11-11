@@ -13,6 +13,7 @@ class Wizard {
         std::vector<std::unique_ptr<Module>> created_modules;
         void setupModule(const std::string& module, int setup, std::vector<std::string>& module_names);
         static std::unique_ptr<Module> setupWeather(std::string name);
+        static std::unique_ptr<Module> setupNews(std::string name);
         //static Calendar setupCalendar(std::string name);
         void removeModule(const std::string& module);
     public:
