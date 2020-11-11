@@ -10,7 +10,10 @@ class Weather : public Module {
     public:
         Weather(const std::string& city, std::string name, int x, int y) : Module(name, x ,y) { initializeWeather(city); };
         ~Weather();
-        void populateModule(); // Add new stuff to the module.
+            void populateModule(); // Add new stuff to the module.
+
+        // Writer callback for libcurl
+        static std::size_t writer(const char* in, std::size_t size, std::size_t num, char* out);
 
         // Signal handlers:
         void on_button_clicked();

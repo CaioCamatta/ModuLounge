@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <curl/curl.h>
 #include <json/json.h>
+#include <cstdio>
 #include <sstream>
 #include "weather.h"
 using namespace std;
@@ -9,14 +10,14 @@ using namespace std;
 Json::Value fetchWeather(string city);
 
 // writer for libcurl API call
-static std::size_t writer(
+std::size_t Weather::writer(
         const char* in,
-        std::size_t size,
-        std::size_t num,
+        size_t size,
+        size_t num,
         char* out)
 {
-    std::string data(in, (std::size_t) size * num);
-    *((std::stringstream*) out) << data;
+    string data(in, (std::size_t) size * num);
+    *((stringstream*) out) << data;
     return size * num;
 }
 
@@ -44,7 +45,7 @@ Json::Value fetchWeather(string city) {
     curl_easy_setopt(curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &Weather::writer);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &httpData);
     curl_easy_perform(curl);
     curl_easy_cleanup(curl);
