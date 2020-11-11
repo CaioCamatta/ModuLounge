@@ -2,11 +2,16 @@
 #define SPORT_H
 
 #include <gtkmm.h>
+#include <jsoncpp/json/json.h>
 #include "../module.h"
 
 class Sport : public Module{
     private:
         void initializeSports(std::string sport);
+
+        std::string sport;
+        Json::Value articles;
+
     public:
         // Use parent constructor. You may not need to customize this constructor at all.
         // New widgets (buttons, text, etc) are supposed to be created in populateModule(), not the constructor.
@@ -18,11 +23,9 @@ class Sport : public Module{
 
         void populateModule(); // Add new stuff to the module.
 
-        // Signal handlers:
-        void on_button_clicked();
-
         // Member widgets:
-        Gtk::Button button; // All of your widgets need to be data members
+        Gtk::Label display1, display2, display3;
+        Gtk::VBox vbox;        
 };
 
 #endif

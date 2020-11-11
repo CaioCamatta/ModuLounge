@@ -1,4 +1,3 @@
-#include "sport.h"
 #include <gtkmm.h>
 #include <curl/curl.h>
 #include <jsoncpp/json/json.h>
@@ -6,47 +5,80 @@
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
+#include "sport.h"
+#include <math.h>
 
-Sport::~Sport(){}
-void initializeSports(std::string sport);
 void displayArticles(Json::Value articles);
 Json::Value getSportsNews(std::string sport);
 static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, char* out);
+Sport::~Sport(){};
+std::string format(std::string des, int runLength);
+
+void Sport::initializeSports(std::string sport){
+   // if(sport != "basketball")
+    this->articles = getSportsNews(sport); //retrieve the articles  
+}
 
 /* Creates custom widgets (like buttons) for the custom module.
 This basically expands upon the parent Module. */
-void Sport::populateModule()
-{
+void Sport::populateModule(){
     std::cout << "Start populating sport Module" << std::endl;
 
-    // // Create a button, with label "Press Me"
-    // this->button = Gtk::Button("Button");
+    int index1, index2, index3;
 
-    // // When the button receives the "clicked" signal, it will call the
-    // // on_button_clicked() method defined below.
-    // this->button.signal_clicked().connect(sigc::mem_fun(*this,
-    //                                                     &SampleModule::on_button_clicked));
+    index1 = 0;
+    index2 = ceil(this->articles["articles"].size()/2);
+    index3 = this->articles["articles"].size()-1;
 
-    // // Add Button to our Box (the Box holds all the widgets of this Module)
-    // // Shrink Widget to its size, add 0 padding
-    // this->box.pack_start(button, Gtk::PACK_SHRINK,0);
+    std::string des1 = this->articles["articles"][index1]["description"].asString();
+    std::string des2 = this->articles["articles"][index2]["description"].asString();
+    std::string des3 = this->articles["articles"][index3]["description"].asString();
 
-    // // Create a second button to demonstrate how multiple widgets can be added to Box
-    // this->button2 = Gtk::Button("Press Me 2");
-    // this->button2.signal_clicked().connect(sigc::mem_fun(*this,
-    //                                                      &SampleModule::on_button_clicked));
-    // this->box.pack_start(button2);
+    std::string title1 = this->articles["articles"][index1]["title"].asString();
+    std::string title2 = this->articles["articles"][index2]["title"].asString();
+    std::string title3 = this->articles["articles"][index3]["title"].asString();
+
+    des1 = format(des1, 100);
+    des2 = format(des2, 100);
+    des3 = format(des3, 100);
+
+    title1 = format(title1, 80);
+    title2 = format(title1, 80);
+    title3 = format(title1, 80);
+
+
+    this->vbox = Gtk::VBox();
+    this->frame.remove();
+    this->frame.add(this->vbox);
+
+    this->display1 = Gtk::Label("Title: " + title1 + "\n"
+    "Written by " + this->articles["articles"][index1]["author"].asString() + "\n" +
+    "From: " + this->articles["articles"][index1]["source"]["name"].asString() + "\n" +
+    "Published at: " + this->articles["articles"][index1]["publishedAt"].asString() + "\n" +
+    "Description: " + des1 + "\n");
+
+    this->display2 = Gtk::Label("Title: " + title2 + "\n"
+    "Written by " + this->articles["articles"][index2]["author"].asString() + "\n" +
+    "From: " + this->articles["articles"][index2]["source"]["name"].asString() + "\n" +
+    "Published at: " + this->articles["articles"][index2]["publishedAt"].asString() + "\n" +
+    "Description: " + des2 + "\n");
+
+    this->display3 = Gtk::Label("Title: " + title3 + "\n"
+    "Written by " + this->articles["articles"][index3]["author"].asString() + "\n" +
+    "From: " + this->articles["articles"][index3]["source"]["name"].asString() + "\n" +
+    "Published at: " + this->articles["articles"][index3]["publishedAt"].asString() + "\n" +
+    "Description: " + des2 + "\n");
+    
+    this->display1.set_justify(Gtk::JUSTIFY_LEFT);
+    this->display2.set_justify(Gtk::JUSTIFY_LEFT);
+    this->display3.set_justify(Gtk::JUSTIFY_LEFT);
+
+
+    this->vbox.pack_start(this->display1, Gtk::PACK_SHRINK,0);
+    this->vbox.pack_start(this->display2, Gtk::PACK_SHRINK,0);
+    this->vbox.pack_start(this->display3, Gtk::PACK_SHRINK,0);
 
     std::cout << "Finished populating custom Module" << std::endl;
-}
-
-void Sport::on_button_clicked(){
-    std::cout << "Button was pressed." << std::endl;
-}
-
-void Sport::initializeSports(std::string sport){
-    Json::Value data = getSportsNews(sport); //retrieve the articles
-    displayArticles(data);                   //display the articles
 }
 
 void displayArticles(Json::Value articles){
@@ -61,6 +93,13 @@ void displayArticles(Json::Value articles){
 }
 
 Json::Value getSportsNews(std::string sport){
+
+    for(int x = 0; sport[x]; x++){
+        if(sport[x] == ' '){
+            sport[x] = '+';
+        }
+    }
+
     const std::string APIKEY = "78572ce08bad450c9a68185c8b7fc9c5";
     const std::string URL = "http://newsapi.org/v2/everything?q=" + sport + "&language=en&sortBy=publishedAt&apiKey=" + APIKEY; //url automatically only takes articles from todays date
 
@@ -85,7 +124,7 @@ Json::Value getSportsNews(std::string sport){
         if(Json::parseFromStream(reader, response_string, &data, &errs)){
             return data;
         }
-        throw std::string("The data could not be retrieved.");
+        throw std::string("No articles could be found for your input. Please enter a more recognizable team or sport.");
     } 
 }
 
@@ -93,4 +132,23 @@ static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, c
     std::string data (ptr, (std::size_t) size * num); //create a string of the data using ptr (which i believe is a pointer to the response stream)
     *((std::stringstream*) out) << data;
     return size * num;
+}
+
+std::string format(std::string des, int runLength){
+    int charCount = 0;
+    for(int i = 0; des[i]; i++){
+        charCount++;
+        if(charCount > runLength && des[i] == ' '){
+            std::string temp1 = des.substr(0, i);
+            std::string temp2 = des.substr(i+1);
+
+            std::cout << temp1 << "\n";
+            std::cout << temp2 << "\n";
+
+            des = temp1 + "\n" + temp2;
+            charCount = 0;
+        }
+    }
+
+    return des;
 }
