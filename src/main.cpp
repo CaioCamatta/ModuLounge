@@ -30,11 +30,6 @@ int main(int argc, char *argv[])
             3. Add the frame to the main grid
     */
 
-    /*std::vector<std::unique_ptr<Module>> modules;
-
-    modules.emplace_back(new SampleModule("Sample Module", 100, 100));
-    modules.emplace_back(new Weather("Toronto", "Sample Module 2", 100, 50));*/
-
     Wizard wizard = Wizard();
     wizard.userSetup();
     std::vector<std::unique_ptr<Module>> modules = move(wizard.getModules());

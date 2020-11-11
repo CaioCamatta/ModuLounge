@@ -1,24 +1,27 @@
 #include <iostream>
 #include <algorithm>
 #include <curl/curl.h>
-#include <jsoncpp/json/json.h> // USe <json/json.h> on mac
+#include <cstdio>
+#include <jsoncpp/json/json.h> // Use <json/json.h> on mac
 #include <sstream>
 #include "weather.h"
 using namespace std;
 
 Json::Value fetchWeather(string city);
 
-static std::size_t writer(
+// writer for libcurl API call
+std::size_t Weather::writer(
         const char* in,
-        std::size_t size,
-        std::size_t num,
+        size_t size,
+        size_t num,
         char* out)
 {
-    std::string data(in, (std::size_t) size * num);
-    *((std::stringstream*) out) << data;
+    string data(in, (std::size_t) size * num);
+    *((stringstream*) out) << data;
     return size * num;
 }
 
+// Display the weather of the specified city upon creation
 void Weather::initializeWeather(string city) {
     Json::Value data = fetchWeather(city);
     if (!data["name"]) {
@@ -31,6 +34,7 @@ Weather::~Weather() {
 
 }
 
+// Call the OpenWeatherMap API and return it's results as a Json Value
 Json::Value fetchWeather(string city) {
     const string API_KEY = "44a9b4cb7355f31110fed676da845337";
     const string url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + API_KEY;
@@ -41,7 +45,7 @@ Json::Value fetchWeather(string city) {
     curl_easy_setopt(curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &Weather::writer);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &httpData);
     curl_easy_perform(curl);
     curl_easy_cleanup(curl);
