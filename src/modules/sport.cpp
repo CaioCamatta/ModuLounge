@@ -43,8 +43,8 @@ void Sport::populateModule(){
     des3 = format(des3, 100);
 
     title1 = format(title1, 80);
-    title2 = format(title1, 80);
-    title3 = format(title1, 80);
+    title2 = format(title2, 80);
+    title3 = format(title3, 80);
 
 
     this->vbox = Gtk::VBox();
@@ -67,7 +67,7 @@ void Sport::populateModule(){
     "Written by " + this->articles["articles"][index3]["author"].asString() + "\n" +
     "From: " + this->articles["articles"][index3]["source"]["name"].asString() + "\n" +
     "Published at: " + this->articles["articles"][index3]["publishedAt"].asString() + "\n" +
-    "Description: " + des2 + "\n");
+    "Description: " + des3 + "\n");
     
     this->display1.set_justify(Gtk::JUSTIFY_LEFT);
     this->display2.set_justify(Gtk::JUSTIFY_LEFT);
