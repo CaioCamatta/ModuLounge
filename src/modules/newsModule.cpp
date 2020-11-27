@@ -23,21 +23,6 @@ size_t NewsModule::saveData(void *contents, size_t size, size_t nmemb, void *use
     return 0;
 }
 
-/*convert string to lowercase and replace " " with "-"
-required to search news properly*/
-std::string NewsModule::formatFilter(std::string filter)
-{
-    int j = 0;
-    while(filter[j]){
-        filter[j] = tolower(filter[j]);
-        j++;
-        if(filter[j] == ' '){
-            filter[j] = '-';
-		}
-    }
-    return filter;
-}
-
 /*Save all the important data from json format to
 * the jsonNews struct for later use
 */
@@ -68,105 +53,53 @@ void NewsModule::saveJson(jsonNews *jNews, newsData news)
 
 void NewsModule::populateModule()
 {
-  bool newsFound = false;
   CURL *curlHandler;
   CURLcode code;
   struct newsData news;
   news.data = (char*)malloc(1); //temporary malloc
   news.size = 0;
 
-  std::string filter;
   std::string newsString;
-  std::string searchString;
-  int searchChoice = -1;
-  while(newsFound == false)
+
+  curlHandler = curl_easy_init();
+  if(curlHandler)
   {
-      while(searchChoice != 1 && searchChoice != 2 && searchChoice != 3)
-      {
-          std::cout << "How would you like to search for news\n";
-          std::cout << "1. Category\n";
-          std::cout << "2. Source\n";
-          std::cout << "3. Topic\n";
-          std::getline(std::cin, filter);
-          searchChoice = std::stoi(filter);
-          if(searchChoice == 1)
-          {
-            std::cout << "Enter category of news (e.x. sports, health, technology):\n";
-            std::getline(std::cin, filter);
-            filter = formatFilter(filter);
-            filter = "category=" + filter;
-            searchString = "https://newsapi.org/v2/top-headlines?country=ca&" + filter + "&apiKey=0e922178d5794b8985681d52fa56898b";
-          }
-          else if(searchChoice == 2)
-          {
-            std::cout << "Enter news source:\n";
-            std::getline(std::cin, filter);
-            filter = formatFilter(filter);
-            filter = "sources=" + filter;
-            searchString = "https://newsapi.org/v2/top-headlines?" + filter + "&apiKey=0e922178d5794b8985681d52fa56898b";
-          }
-          else if(searchChoice == 3)
-          {
-            std::cout << "Enter topic:\n";
-            std::getline(std::cin, filter);
-            filter = formatFilter(filter);
-            filter = "q=" + filter;
-            searchString = "https://newsapi.org/v2/top-headlines?country=ca&" + filter + "&apiKey=0e922178d5794b8985681d52fa56898b";
-          }
+    curl_easy_setopt(curlHandler, CURLOPT_URL, searchString.c_str());
 
-      }
+    curl_easy_setopt(curlHandler, CURLOPT_WRITEFUNCTION, saveData);
 
-      curlHandler = curl_easy_init();
-      if(curlHandler)
-      {
-        curl_easy_setopt(curlHandler, CURLOPT_URL, searchString.c_str());
+    curl_easy_setopt(curlHandler, CURLOPT_WRITEDATA, (void *)&news);
 
-        curl_easy_setopt(curlHandler, CURLOPT_WRITEFUNCTION, saveData);
+    /*connect to site and receive transfer, after transfer is received callback function is called */
+    code = curl_easy_perform(curlHandler);
 
-        curl_easy_setopt(curlHandler, CURLOPT_WRITEDATA, (void *)&news);
-
-        /*connect to site and receive transfer, after transfer is received callback function is called */
-        code = curl_easy_perform(curlHandler);
-
-        /* Check for errors */
-        if(code != CURLE_OK)
-        {
-            std::cout << "curl_easy_perform() failed\n";
-            std::cout << curl_easy_strerror(code);
-        }
-        //struct jsonNews newsToDisplay;
-        saveJson(&newsToDisplay, news);
-        if(newsToDisplay.content != "")
-        {
-            newsFound = true;
-            std::cout << "Start populating custom Module" << std::endl;
-
-            // Create a button, with label of the source of news
-            this->button = Gtk::Button(newsToDisplay.source);
-
-            // When the button receives the "clicked" signal, it will call the
-            // on_button_clicked() method defined below.
-            this->button.signal_clicked().connect(sigc::mem_fun(*this,
-                                                                &NewsModule::on_button_clicked));
-
-            // Add Button to our Box (the Box holds all the widgets of this Module)
-            // Shrink Widget to its size, add 0 padding
-            this->box.pack_start(button, Gtk::PACK_SHRINK,0);
-
-            std::cout << "Finished populating custom Module" << std::endl;
-        }
-        else
-        {
-            //allows while loop to run again
-            searchChoice = -1;
-            filter = ""; // reset the search filter
-            news.data = (char*)malloc(1); //temporary malloc
-            news.size = 0;
-        }
-
+    /* Check for errors */
+    if(code != CURLE_OK)
+    {
+        std::cout << "curl_easy_perform() failed\n";
+        std::cout << curl_easy_strerror(code);
     }
+    //struct jsonNews newsToDisplay;
+    saveJson(&newsToDisplay, news);
+    std::cout << "Start populating custom Module" << std::endl;
+
+    // Create a button, with label of the source of news
+    this->button = Gtk::Button(newsToDisplay.source);
+
+    // When the button receives the "clicked" signal, it will call the
+    // on_button_clicked() method defined below.
+    this->button.signal_clicked().connect(sigc::mem_fun(*this,
+                                                        &NewsModule::on_button_clicked));
+
+    // Add Button to our Box (the Box holds all the widgets of this Module)
+    // Shrink Widget to its size, add 0 padding
+    this->box.pack_start(button, Gtk::PACK_SHRINK,0);
+
+    std::cout << "Finished populating custom Module" << std::endl;
+
 
   }
+
   curl_easy_cleanup(curlHandler);
 
 }
