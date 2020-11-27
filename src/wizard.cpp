@@ -153,7 +153,75 @@ unique_ptr<Module> Wizard::setupSport(string name) {
     return unique_ptr<Module>(new Sport(lowercase(sport), name, 100, 50));
 }
 unique_ptr<Module> Wizard::setupNews(string name) {
-    return unique_ptr<Module>(new NewsModule(name, 100, 50));
+    std::string filter;
+    std::string searchString;
+    int searchChoice = -1;
+
+    while(searchChoice != 1 && searchChoice != 2 && searchChoice != 3)
+    {
+        std::cout << "How would you like to search for news\n";
+        std::cout << "1. Category\n";
+        std::cout << "2. Source\n";
+        std::cout << "3. Topic\n";
+        std::getline(std::cin, filter);
+        try
+        {
+            searchChoice = std::stoi(filter);
+        }
+        catch(const std::exception& ex)
+        {
+            std::cout << "Please select 1, 2 or 3\n";
+        }
+
+
+        if(searchChoice == 1)
+        {
+            std::cout << "Enter category of news (e.x. sports, health, technology):\n";
+            std::getline(std::cin, filter);
+            int j = 0;
+            while(filter[j]){
+                filter[j] = tolower(filter[j]);
+                j++;
+                if(filter[j] == ' '){
+                    filter[j] = '-';
+                }
+            }
+            filter = "category=" + filter;
+            searchString = "https://newsapi.org/v2/top-headlines?country=ca&" + filter + "&apiKey=0e922178d5794b8985681d52fa56898b";
+        }
+      else if(searchChoice == 2)
+      {
+            std::cout << "Enter news source:\n";
+            std::getline(std::cin, filter);
+            int j = 0;
+            while(filter[j]){
+                filter[j] = tolower(filter[j]);
+                j++;
+                if(filter[j] == ' '){
+                    filter[j] = '-';
+                }
+            }
+            filter = "sources=" + filter;
+            searchString = "https://newsapi.org/v2/top-headlines?" + filter + "&apiKey=0e922178d5794b8985681d52fa56898b";
+      }
+      else if(searchChoice == 3)
+      {
+            std::cout << "Enter topic:\n";
+            std::getline(std::cin, filter);
+            int j = 0;
+            while(filter[j]){
+                filter[j] = tolower(filter[j]);
+                j++;
+                if(filter[j] == ' '){
+                    filter[j] = '-';
+                }
+            }
+            filter = "q=" + filter;
+            searchString = "https://newsapi.org/v2/top-headlines?country=ca&" + filter + "&apiKey=0e922178d5794b8985681d52fa56898b";
+      }
+
+  }
+    return unique_ptr<Module>(new NewsModule(searchString, name, 100, 50));
 }
 // Accessor for the vector of all created modules
 vector<unique_ptr<Module>> & Wizard::getModules() {
