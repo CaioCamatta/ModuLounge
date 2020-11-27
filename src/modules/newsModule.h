@@ -9,7 +9,15 @@
 #include<exception>
 #include <gtkmm.h>
 #include "../module.h"
-
+/**
+* @class NewsModule
+* @author Ryan Harlen
+* @brief A subclass of the Module class.
+* This class is used to create a module that will disaplay relevant news information.
+* News can be searched for by category, source, or topic.
+* If found, source, title, date, description and content of the news found will be displayed to the screen.
+*
+*/
 class NewsModule : public Module
 {
 private:
@@ -28,19 +36,45 @@ private:
         char *data;
         size_t size;
     };
+    /**
+    * @param passed in through the use of curl_easy_setopt
+    * @return the size of the data being saved
+    * @brief required when using curl to save the data retrived so that it can be used later
+    */
     static size_t saveData(void *contents, size_t size, size_t nmemb, void *userp);
-    std::string formatFilter(std::string filter);
+    /**
+    * @param a struct to store all important news data, and the associated data that will be save in the struct
+    * @return none
+    * @brief store the data in the object's jsonNews struct.
+    * This allows for easy access to the data whenever required
+    * Default values are provided if some values are missing
+    */
     void saveJson(jsonNews *jNews, newsData news);
+    std::string searchString;
     jsonNews newsToDisplay;
 
+
 public:
-    // Use parent constructor. You may not need to customize this constructor at all.
-    // New widgets (buttons, text, etc) are supposed to be created in populateModule(), not the constructor.
-    NewsModule(std::string name, int width, int height) : Module(name, width, height){};
+    /**
+    * @param the string used to search the news API, name of the module, width and height of the module
+    * @return none
+    * @brief calls the default module constructor and sets the value of searchString, so that the news API can be searched
+    */
+    NewsModule(std::string toSearchString, std::string name, int width, int height) : Module(name, width, height){this->searchString = toSearchString;};
 
-    void populateModule(); // Add new stuff to the module.
+    /**
+    * @param none
+    * @return none
+    * @brief Retrieves news based off of user specifications chosen prior.
+    * Adds visual elements to the module that will be displayed on the screen
+    */
+    void populateModule();
 
-    // Signal handlers:
+    /**
+    * @param none
+    * @return none
+    * @brief Displays news source, content, description and date to the console.
+    */
     void on_button_clicked();
 
     // Member widgets:
