@@ -2,7 +2,7 @@
 #define SPORT_H
 
 #include <gtkmm.h>
-#include <jsoncpp/json/json.h>
+#include <json/json.h>
 #include "../module.h"
 
 class Sport : public Module{
