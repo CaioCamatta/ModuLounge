@@ -8,6 +8,7 @@
 #include "modules/calendar.h"
 #include "modules/sport.h"
 #include "modules/newsModule.h"
+#include "modules/stocks.h"
 using namespace std;
 
 vector<unique_ptr<Module>> created_modules;
@@ -24,7 +25,7 @@ string lowercase(string& str) { transform(str.begin(), str.end(), str.begin(), :
  * Also allows for other actions such as 'help' and 'remove'
  */
 void Wizard::userSetup() {
-    vector<string> module_names = {"weather", "calendar", "sport", "news"};
+    vector<string> module_names = {"weather", "calendar", "sport", "news", "stocks"};
     bool done = false;
     bool exit = false;
 
@@ -57,6 +58,8 @@ void Wizard::userSetup() {
             setupModule("sport", 3, module_names);
         } else if (input == "news") {
             setupModule("news", 4, module_names);
+        } else if (input == "stocks") {
+            setupModule("stocks", 5, module_names);
         } else if (input == "exit") {
             exit = true;
             done = true;
@@ -119,6 +122,9 @@ void Wizard::setupModule(const string& module, int setup, vector<string>& module
                 case 4:
                     created_modules.emplace_back(setupNews(module));
                     break;
+                case 5:
+                    created_modules.emplace_back(setupStocks(module));
+                    break;
                 default:
                     break;
             }
@@ -152,6 +158,15 @@ unique_ptr<Module> Wizard::setupSport(string name) {
     getline(cin, sport);
     return unique_ptr<Module>(new Sport(lowercase(sport), name, 100, 50));
 }
+
+// Setup stocks
+unique_ptr<Module> Wizard::setupStocks(string name) {
+    string stock;
+    cout << "Enter the stock you'd like to see (E.g. AAPL): ";
+    getline(cin, stock);
+    return unique_ptr<Module>(new Stocks(lowercase(stock), name, 100, 50));
+}
+
 unique_ptr<Module> Wizard::setupNews(string name) {
     std::string filter;
     std::string searchString;
