@@ -21,19 +21,28 @@ std::size_t Stocks::WriteCallback(
 }
 
 // Display the Stocks of the specified stock upon creation
-void Stocks::initializeStocks(string stock)
+void Stocks::initializeStocks(vector<string> stocks)
 {
-    Json::Value data = fetchStocks(stock);
-    if (!data[0]["price"])
+    vector<Json::Value> stockInfo;
+    Json::Value data;
+    for (vector<string>::iterator it = stocks.begin(); it != stocks.end(); ++it)
     {
-        throw string("Stock ticker does not exist");
+        cout << ' ' << *it << endl;
+        data = fetchStock(*it);
+
+        if (!data[0]["price"])
+        {
+            throw string("Stock ticker " + *it + " does not exist");
+        }
+
+        // Get price as float with 2 decimal points of precision
+        cout << fixed << setprecision(2) << data[0].get("price", 0).asFloat() << endl;
+        stockInfo.push_back(data);
     }
-    // Get price as float with 2 decimal points of precision
-    std::cout << std::fixed << std::setprecision(2) << data[0].get("price", 0).asFloat() << endl;
 }
 
 // Get up-to-date stock information from Financial Modeling Prep API
-Json::Value Stocks::fetchStocks(string stock)
+Json::Value Stocks::fetchStock(string stock)
 {
     const string API_KEY = "bffb7d7b619c5a34c6d9b31f9ee2e289";
     const string url = "https://financialmodelingprep.com/api/v3/profile/" + stock + "?apikey=" + API_KEY;

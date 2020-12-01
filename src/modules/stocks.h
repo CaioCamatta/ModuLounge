@@ -7,17 +7,17 @@
 class Stocks : public Module
 {
 private:
-    void initializeStocks(std::string stock);
+    void initializeStocks(std::vector<std::string> stocks);
 
 public:
-    Stocks(const std::string &stock, std::string name, int x, int y) : Module(name, x, y)
+    Stocks(const std::vector<std::string> stocks, std::string name, int x, int y) : Module(name, x, y)
     {
-        initializeStocks(stock);
+        initializeStocks(stocks);
     };
     ~Stocks(){};
     void populateModule(); // Add new stuff to the module.
 
-    Json::Value fetchStocks(std::string stock);
+    Json::Value fetchStock(std::string stock);
 
     // Writer callback for libcurl
     static std::size_t WriteCallback(const char *in, std::size_t size, std::size_t num, char *out);
