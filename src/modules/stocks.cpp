@@ -8,6 +8,15 @@
 #include "stocks.h"
 using namespace std;
 
+// Constructor
+Stocks::Stocks(const vector<string> stocks, string name, int x, int y) : Module(name, x, y)
+{
+    this->stocks = stocks;
+    initializeStocks(stocks);
+};
+
+Stocks::~Stocks() {}
+
 // Write Callback for libcurl API call
 std::size_t Stocks::WriteCallback(
     const char *in,
@@ -38,6 +47,7 @@ void Stocks::initializeStocks(vector<string> stocks)
         cout << fixed << setprecision(2) << data[0].get("price", 0).asFloat() << endl;
         stockInfo.push_back(data);
     }
+    this->stockInfo = stockInfo;
 }
 
 // Get up-to-date stock information from Financial Modeling Prep API
@@ -72,6 +82,35 @@ Json::Value Stocks::fetchStock(string stock)
 void Stocks::populateModule()
 {
     std::cout << "Started populating Stocks Module" << std::endl;
+
+    // Iterate through vector (only available in C++ 11 or greater)
+    for (auto i : this->stocks)
+    {
+        std::cout << i << std::endl;
+        this->stockLabels.push_back(Gtk::Label("Asd"));
+    }
+
+    // Iterate through labels
+    for (vector<Gtk::Label>::iterator it = this->stockLabels.begin(); it != this->stockLabels.end(); ++it)
+    {
+        this->box.pack_start(*it, Gtk::PACK_SHRINK, 0);
+    }
+
+    Glib::ustring data = ".bold {color: green;}";
+    auto css = Gtk::CssProvider::create();
+    if (not css->load_from_data(data))
+    {
+        cerr << "Failed to load css\n";
+        std::exit(1);
+    }
+
+    this->currentTime = Gtk::Label("Test CSS");
+    this->currentTime.get_style_context()->add_class("bold");
+    cout << this->currentTime.get_style_context()->has_class("bold") << endl;
+
+    this->currentTime.get_style_context()->add_provider(css,
+                                                        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    this->box.pack_start(this->currentTime, Gtk::PACK_SHRINK, 0);
 
     std::cout << "Finished populating Stocks Module" << std::endl;
 }

@@ -29,6 +29,8 @@ To run the app, use `make`:
   - [Container Widgets (e.g. Boxes)](https://developer.gnome.org/gtkmm-tutorial/stable/chapter-container-widgets.html.en)
   - [Misc Widgets (e.g. text Labels)](https://developer.gnome.org/gtkmm-tutorial/stable/chapter-misc-widgets.html.en)
 
+- [GTK CSS Properties](https://developer.gnome.org/gtk3/stable/chap-css-properties.html)
+
 ## UI Structure
 
 This is the structure of the UI
