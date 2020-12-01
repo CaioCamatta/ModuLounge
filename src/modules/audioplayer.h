@@ -5,7 +5,7 @@
 //#include <filesystem>
 #include <iostream>
 
-class Audioplayer: public Audioplayer{
+class Audioplayer: public Module{
 
     private:
         void startMusic();

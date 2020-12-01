@@ -14,9 +14,6 @@ void Audioplayer::startMusic(){
     while ((files = readdir (dir)) != NULL) {
         playSound(files->d_name);
     }
-
-
-
 }
 
 bool playSound(string songfile){
@@ -28,6 +25,7 @@ bool playSound(string songfile){
     FILE * inputSong = fopen(songfile,"rb");
 
     song = new RtAudio(&streamdID, 0,2,0,0, inputSong, &sampleHertz, &buffersize, 4);
+    song->startStream();
 
     int count =0;
     while(count < 48000){
@@ -49,7 +47,7 @@ Audioplayer::~Audioplayer(){
 }
 
 void Audioplayer::populateModule(){
-
+    //put some indication that music is playing
 }
 
 void Audioplayer::on_button_clicked(){

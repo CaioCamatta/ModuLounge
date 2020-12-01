@@ -24,7 +24,7 @@ string lowercase(string& str) { transform(str.begin(), str.end(), str.begin(), :
  * Also allows for other actions such as 'help' and 'remove'
  */
 void Wizard::userSetup() {
-    vector<string> module_names = {"weather", "calendar", "sport", "news"};
+    vector<string> module_names = {"weather", "calendar", "sport", "news", "music"};
     bool done = false;
     bool exit = false;
 
@@ -57,6 +57,8 @@ void Wizard::userSetup() {
             setupModule("sport", 3, module_names);
         } else if (input == "news") {
             setupModule("news", 4, module_names);
+        } else if (input == "music") {
+            setupModule("music", 5, module_names);
         } else if (input == "exit") {
             exit = true;
             done = true;
@@ -119,6 +121,9 @@ void Wizard::setupModule(const string& module, int setup, vector<string>& module
                 case 4:
                     created_modules.emplace_back(setupNews(module));
                     break;
+                case 5:
+                    created_modules.emplace_back(setupMusic(module));
+                    break;
                 default:
                     break;
             }
@@ -154,6 +159,9 @@ unique_ptr<Module> Wizard::setupSport(string name) {
 }
 unique_ptr<Module> Wizard::setupNews(string name) {
     return unique_ptr<Module>(new NewsModule(name, 100, 50));
+}
+unique_ptr<Module> Wizard::setupMusic(string name) {
+    return unique_ptr<Module>(new audioplayer(name, 100, 50));
 }
 // Accessor for the vector of all created modules
 vector<unique_ptr<Module>> & Wizard::getModules() {
