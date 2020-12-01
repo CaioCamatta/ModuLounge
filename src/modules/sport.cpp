@@ -5,30 +5,21 @@
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
+#include <thread>
 #include "sport.h"
 #include <math.h>
 
-// function declarations so they can be used before their definition
-void displayArticles(Json::Value articles);
-Json::Value getSportsNews(std::string sport);
-static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, char* out);
+// Destructor definition
 Sport::~Sport(){};
-std::string format(std::string des, int runLength);
+static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, char* out);
 
 /**
  * @brief Initialize sports setts 
  * Detailed description: I feel as though a constructor is self explanatory
  */
 void Sport::initializeSports(std::string sport){
-   // if(sport != "basketball")
-    this->articles = getSportsNews(sport); //retrieve the articles  
-}
-
-/* Creates custom widgets (like buttons) for the custom module.
-This basically expands upon the parent Module. */
-void Sport::populateModule(){
-    std::cout << "Start populating sport Module" << std::endl;
-
+   
+    this->articles = Sport::getSportsNews(sport); //retrieve the articles 
     int index1, index2, index3;
     //select three difference articles at random using an index number
     if(this->articles["articles"].size() >= 1){
@@ -42,7 +33,6 @@ void Sport::populateModule(){
             index3 = rand() % this->articles["articles"].size();
         }
     }
-
 
     std::string des1 = this->articles["articles"][index1]["description"].asString();
     std::string des2 = this->articles["articles"][index2]["description"].asString();
@@ -60,6 +50,12 @@ void Sport::populateModule(){
     std::string published2 = this->articles["articles"][index2]["publishedAt"].asString();
     std::string published3 = this->articles["articles"][index3]["publishedAt"].asString();
 
+    if(title1.length() == 0){
+        title1 = "No Articles Found for That KeyWord!";
+        title2 = "No Articles Found for That KeyWord!";
+        title3 = "No Articles Found for That KeyWord!";
+    }
+
     des1 = format(des1, 100);
     des2 = format(des2, 100);
     des3 = format(des3, 100);
@@ -75,20 +71,6 @@ void Sport::populateModule(){
     published1 = format(published1, 100);   
     published2 = format(published2, 100);   
     published3 = format(published3, 100);   
-
-    if(title1.length() == 0){
-        title1 = "No Articles Found for That KeyWord!";
-        title2 = "No Articles Found for That KeyWord!";
-        title3 = "No Articles Found for That KeyWord!";
-    }
-
-    //initialize vertical box to display articles on top of one another
-    this->vboxMain = Gtk::VBox();
-
-    //remove the box currently in the frame that was inherited
-    this->frame.remove();
-    //add the new box to the frame
-    this->frame.add(this->vboxMain);
 
     this->display1 = Gtk::Label("Title: \n" + title1 + "\n"
     "Written by \n" + author1 + "\n" +
@@ -108,24 +90,34 @@ void Sport::populateModule(){
     "Published at: \n" + published3 + "\n" + "Description: \n" +
     des3 + "\n");
     
-    this->display1.set_justify(Gtk::JUSTIFY_LEFT);
-    this->display2.set_justify(Gtk::JUSTIFY_LEFT);
-    this->display3.set_justify(Gtk::JUSTIFY_LEFT);
+}
 
-    // gtk_widget_set_halign (GTK_WIDGET(&display1), GTK_ALIGN_START);
-    // gtk_widget_set_halign (GTK_WIDGET(&display2), GTK_ALIGN_START);
-    // gtk_widget_set_halign (GTK_WIDGET(&display3), GTK_ALIGN_START);
+/* Creates custom widgets (like buttons) for the custom module.
+This basically expands upon the parent Module. */
+void Sport::populateModule(){
+    std::cout << "Start populating sport Module" << std::endl;
 
-    //add the displays to the vertical box -- have a vertical box that holds a vertical box for each article so they align to the left
+
+
+    //initialize vertical box to display articles on top of one another
+    this->vboxMain = Gtk::VBox();
+
+    //remove the box currently in the frame that was inherited
+    this->frame.remove();
+    //add the new box to the frame
+    this->frame.add(this->vboxMain);
 
     this->vboxMain.pack_start(this->display1, Gtk::PACK_SHRINK,0);
     this->vboxMain.pack_start(this->display2, Gtk::PACK_SHRINK,0);
     this->vboxMain.pack_start(this->display3, Gtk::PACK_SHRINK,0);
 
+    std::thread sportThread(&Sport::refresher, this, this->sport);
+    sportThread.detach();
+
     std::cout << "Finished populating custom Module" << std::endl;
 }
 
-void displayArticles(Json::Value articles){
+void Sport::displayArticles(Json::Value articles){
     int size = articles["articles"].size();
     for(int x = 0; x < size; x++){
         std::cout << articles["articles"][x]["title"].asString() << "\n";
@@ -136,7 +128,7 @@ void displayArticles(Json::Value articles){
     }
 }
 
-Json::Value getSportsNews(std::string sport){
+Json::Value Sport::getSportsNews(std::string sport){
 
     for(int x = 0; sport[x]; x++){
         if(sport[x] == ' '){
@@ -178,14 +170,12 @@ static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, c
     return size * num;
 }
 
-std::string format(std::string des, int runLength){
+std::string Sport::format(std::string des, int runLength){
     int charCount = 0;
 
     if(des.length() < runLength){
-        std::cout << "here" << "\n";
         for(int i = des.length(); i < runLength; i++){
             des = des + " ";
-            std::cout << des.length() << "\n";
         }
     }
     else{
@@ -208,4 +198,94 @@ std::string format(std::string des, int runLength){
     }
 
     return des;
+}
+
+void Sport::refresher(std::string sport){
+    while(true){
+        std::this_thread::sleep_for (std::chrono::seconds(20));
+        Sport::refreshArticles(sport);
+    }
+}
+
+void Sport::refreshArticles(std::string sport){
+
+    this->articles = Sport::getSportsNews(sport); //retrieve the articles 
+
+    int index1, index2, index3;
+    //select three difference articles at random using an index number
+    if(this->articles["articles"].size() >= 1){
+        index1 = rand() % this->articles["articles"].size();
+        index2 = rand() % this->articles["articles"].size();
+        while(index2 == index1 && this->articles["articles"].size() >=2){
+            index2 = rand() % this->articles["articles"].size();
+        }
+        index3 = rand() % this->articles["articles"].size();
+        while(index3 == index2 || index3 == index1 && this->articles["articles"].size() >=3){
+            index3 = rand() % this->articles["articles"].size();
+        }
+    }
+
+    std::string temp1;
+    std::string temp2;
+    std::string temp3;
+
+    std::string des1 = this->articles["articles"][index1]["description"].asString();
+    std::string des2 = this->articles["articles"][index2]["description"].asString();
+    std::string des3 = this->articles["articles"][index3]["description"].asString();
+
+    std::string title1 = this->articles["articles"][index1]["title"].asString();
+    std::string title2 = this->articles["articles"][index2]["title"].asString();
+    std::string title3 = this->articles["articles"][index3]["title"].asString();
+
+    std::string author1 = this->articles["articles"][index1]["author"].asString();
+    std::string author2 = this->articles["articles"][index2]["author"].asString();
+    std::string author3 = this->articles["articles"][index3]["author"].asString();
+
+    std::string published1 = this->articles["articles"][index1]["publishedAt"].asString();
+    std::string published2 = this->articles["articles"][index2]["publishedAt"].asString();
+    std::string published3 = this->articles["articles"][index3]["publishedAt"].asString();
+
+    if(title1.length() == 0){
+        title1 = "No Articles Found for That KeyWord!";
+        title2 = "No Articles Found for That KeyWord!";
+        title3 = "No Articles Found for That KeyWord!";
+    }
+
+    des1 = format(des1, 100);
+    des2 = format(des2, 100);
+    des3 = format(des3, 100);
+
+    title1 = format(title1, 100);
+    title2 = format(title2, 100);
+    title3 = format(title3, 100);
+
+    author1 = format(author1, 100);  
+    author2 = format(author2, 100);   
+    author3 = format(author3, 100);
+
+    published1 = format(published1, 100);   
+    published2 = format(published2, 100);   
+    published3 = format(published3, 100);   
+
+    temp1 = "Title: \n" + title1 + "\n"
+    "Written by \n" + author1 + "\n" +
+    "From: \n" + this->articles["articles"][index1]["source"]["name"].asString() + "\n" +
+    "Published at: \n" + published1 + "\n" + "Description: \n" +
+    des1 + "\n";
+
+    temp2 = "Title: \n" + title2 + "\n"
+    "Written by \n" + author2 + "\n" +
+    "From: \n" + this->articles["articles"][index2]["source"]["name"].asString() + "\n" +
+    "Published at: \n" + published2 + "\n" + "Description: \n" +
+    des2 + "\n";
+
+    temp3 = "Title: \n" + title3 + "\n"
+    "Written by \n" + author3 + "\n" +
+    "From: \n" + this->articles["articles"][index3]["source"]["name"].asString() + "\n" +
+    "Published at: \n" + published3 + "\n" + "Description: \n" +
+    des3 + "\n";
+
+    this->display1.set_label(temp1);
+    this->display2.set_label(temp2);
+    this->display3.set_label(temp3);
 }

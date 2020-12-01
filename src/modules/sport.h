@@ -14,6 +14,9 @@
 class Sport : public Module{
     private:
         void initializeSports(std::string sport);
+        std::string format(std::string des, int runLength);
+        void displayArticles(Json::Value articles);
+        Json::Value getSportsNews(std::string sport);
         // the sport/team specified by the user 
         std::string sport;
         // A json array of articles that are retreived from api
@@ -25,12 +28,16 @@ class Sport : public Module{
          * Detailed description: I feel as though a constructor is self explanatory
          */
         Sport(const std::string& sport, std::string name, int width, int height) : Module(name, width, height){
+            this->sport = sport;
             initializeSports(sport);
         };
 
         ~Sport();
 
         void populateModule();
+
+        void refresher(std::string sport);
+        void refreshArticles(std::string sport);
 
         // widgets to display articles inside the frame 
         Gtk::Label display1, display2, display3;
