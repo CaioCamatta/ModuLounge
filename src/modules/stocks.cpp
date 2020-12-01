@@ -93,7 +93,8 @@ void Stocks::populateModule()
         boost::to_upper(*i);
 
         // Round price to two decimals
-        float price = this->stockInfo.at(0).get("price", 0).asFloat();
+        auto index = std::distance(this->stocks.begin(), i); 
+        float price = this->stockInfo.at(index).get("price", 0).asFloat();
         stringstream stream;
         stream << fixed << setprecision(2) << price;
         string roundPrice = stream.str();
@@ -101,7 +102,6 @@ void Stocks::populateModule()
         // Show TICKER:price
         temp_label->set_markup("<b>" + *i + ":</b> " + roundPrice);
         temp_label->set_halign(Gtk::ALIGN_START);
-        temp_label->get_style_context()->add_class("my-custom-yellow-color");
 
         this->box.pack_start(*(temp_label), Gtk::PACK_SHRINK, 3);
     }
