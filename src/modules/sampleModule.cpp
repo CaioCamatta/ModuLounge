@@ -35,7 +35,7 @@ void SampleModule::populateModule()
     auto css = Gtk::CssProvider::create();
     if (not css->load_from_data(data))
     {
-        cerr << "Failed to load css\n";
+        std::cerr << "Failed to load css\n";
         std::exit(1);
     }
     this->button2.get_style_context()->add_class("custom-sample-button2");

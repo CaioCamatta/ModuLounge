@@ -47,3 +47,14 @@ What are Widgets?
 How do I create a module>
 
 - Under `src/modules`, you will create `yourModule.cpp` and `yourModule.h`. Use the `sampleModule` as reference. All modules we create inherit from `Module`, which is the parent class that conveniently creates (and sets up) a `Frame` and `Box` to be used by the children modules. Your custom module needs to be instantiated and configured in `main.cpp` (again, use the sample module as reference).
+
+## Adding CSS
+`main.css` can be accessed by any widget in the entire application. Simple add your css class to `main.css`, e.g.
+
+    .my-custom-css {color: red;}
+
+Then add your class (`my-custom-css`) to your Widget, e.g.
+
+    this->myWidget.get_style_context()->add_class("my-custom-css");
+
+You can also create separate CSS files (e.g. `stock.css`) and use them in your module. There is an example of how to use a separate css file under `sampleModule.cpp`. 

@@ -98,7 +98,6 @@ void Stocks::populateModule()
 
     this->currentTime = Gtk::Label("Test CSS");
     this->currentTime.get_style_context()->add_class("bold");
-    cout << this->currentTime.get_style_context()->has_class("bold") << endl;
 
     this->box.pack_start(this->currentTime, Gtk::PACK_SHRINK, 0);
 
