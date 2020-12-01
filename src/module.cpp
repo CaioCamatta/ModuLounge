@@ -7,7 +7,6 @@ This Module can be displayed on its own, but it doesn't have anything, and
 is supposed to be inherited and expanded by the child modules*/
 Module::Module(std::string name, int width, int height)
 {
-    std::cout << "Start creation of Module" << std::endl;
     this->name = name;
     this->width = width; // Min Box width
     this->height = height;// Min Box height
@@ -25,7 +24,7 @@ Module::Module(std::string name, int width, int height)
     this->frame.set_border_width(10);
     this->frame.add(box); // Add/"link" box to frame, this only needs to be done once.
 
-    std::cout << "Finished creating Module" << std::endl;
+    std::cout << " :: Module added." << std::endl;
 }
 
 Module::~Module() {

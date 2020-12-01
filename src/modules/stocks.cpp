@@ -1,10 +1,12 @@
 #include <iostream>
-#include <iomanip> // For decimal places
+#include <iomanip>
 #include <algorithm>
 #include <curl/curl.h>
 #include <cstdio>
 #include <jsoncpp/json/json.h>
 #include <sstream>
+#include <ctime>
+#include <boost/algorithm/string.hpp>
 #include "stocks.h"
 using namespace std;
 
@@ -44,8 +46,7 @@ void Stocks::initializeStocks(vector<string> stocks)
         }
 
         // Get price as float with 2 decimal points of precision
-        cout << fixed << setprecision(2) << data[0].get("price", 0).asFloat() << endl;
-        stockInfo.push_back(data);
+        stockInfo.push_back(data[0]);
     }
     this->stockInfo = stockInfo;
 }
@@ -81,26 +82,36 @@ Json::Value Stocks::fetchStock(string stock)
 
 void Stocks::populateModule()
 {
-    std::cout << "Started populating Stocks Module" << std::endl;
+    // Use a vertical box for this module
+    this->box.set_orientation(Gtk::ORIENTATION_VERTICAL);
 
-    // Iterate through vector (only available in C++ 11 or greater)
-    for (auto i : this->stocks)
+    // Iterate through vector (only available this way in C++ 11 or greater)
+    for (auto i = this->stocks.begin(); i != this->stocks.end(); ++i)
     {
-        std::cout << i << std::endl;
-        this->stockLabels.push_back(Gtk::Label("Asd"));
+        auto temp_label = new Gtk::Label(); // Use 'new' objects whose lifetime is not necessarily limited by the scope in which they were created.
+
+        boost::to_upper(*i);
+
+        // Round price to two decimals
+        float price = this->stockInfo.at(0).get("price", 0).asFloat();
+        stringstream stream;
+        stream << fixed << setprecision(2) << price;
+        string roundPrice = stream.str();
+
+        // Show TICKER:price
+        temp_label->set_markup("<b>" + *i + ":</b> " + roundPrice);
+        temp_label->set_halign(Gtk::ALIGN_START);
+        temp_label->get_style_context()->add_class("my-custom-yellow-color");
+
+        this->box.pack_start(*(temp_label), Gtk::PACK_SHRINK, 3);
     }
 
-    // Iterate through labels
-    for (vector<Gtk::Label>::iterator it = this->stockLabels.begin(); it != this->stockLabels.end(); ++it)
-    {
-        this->box.pack_start(*it, Gtk::PACK_SHRINK, 0);
-    }
-
+    // Also show current date/time based on current system
+    time_t now = time(0);
+    string dt = ctime(&now);
     this->currentTime = Gtk::Label();
-    this->currentTime.set_markup("<i>New test</i>");
-    this->currentTime.get_style_context()->add_class("bold");
+    this->currentTime.set_markup("<small>Last updated " + dt.substr(11, 8) + "</small>");
+    this->box.pack_start(currentTime, Gtk::PACK_SHRINK, 3);
 
-    this->box.pack_start(this->currentTime, Gtk::PACK_SHRINK, 0);
-
-    std::cout << "Finished populating Stocks Module" << std::endl;
+    std::cout << " :: Done populating stocks module." << std::endl;
 }

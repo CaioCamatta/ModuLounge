@@ -11,6 +11,7 @@ First, Install GTKMM and other libraries required
     sudp apt-get install libgtkmm-3.0-dev
     sudo apt-get install libjsoncpp-dev
     sudo apt-get install libcurl4 libcurl4-openssl-dev -y
+    sudo apt-get install libboost-dev
 
 To run the app, use `make`:
 
