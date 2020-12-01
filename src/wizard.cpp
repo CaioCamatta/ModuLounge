@@ -127,7 +127,7 @@ void Wizard::setupModule(const string& module, int setup, vector<string>& module
             cout << "Module already added" << endl;
         }
     } catch (string &e) {
-        cout << e << endl;
+        cerr << e << endl;
     }
 }
 
