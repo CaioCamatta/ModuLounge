@@ -8,12 +8,17 @@
 #include "sport.h"
 #include <math.h>
 
+// function declarations so they can be used before their definition
 void displayArticles(Json::Value articles);
 Json::Value getSportsNews(std::string sport);
 static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, char* out);
 Sport::~Sport(){};
 std::string format(std::string des, int runLength);
 
+/**
+ * @brief Initialize sports setts 
+ * Detailed description: I feel as though a constructor is self explanatory
+ */
 void Sport::initializeSports(std::string sport){
    // if(sport != "basketball")
     this->articles = getSportsNews(sport); //retrieve the articles  
@@ -25,10 +30,19 @@ void Sport::populateModule(){
     std::cout << "Start populating sport Module" << std::endl;
 
     int index1, index2, index3;
+    //select three difference articles at random using an index number
+    if(this->articles["articles"].size() >= 1){
+        index1 = rand() % this->articles["articles"].size();
+        index2 = rand() % this->articles["articles"].size();
+        while(index2 == index1 && this->articles["articles"].size() >=2){
+            index2 = rand() % this->articles["articles"].size();
+        }
+        index3 = rand() % this->articles["articles"].size();
+        while(index3 == index2 || index3 == index1 && this->articles["articles"].size() >=3){
+            index3 = rand() % this->articles["articles"].size();
+        }
+    }
 
-    index1 = 0;
-    index2 = ceil(this->articles["articles"].size()/2);
-    index3 = this->articles["articles"].size()-1;
 
     std::string des1 = this->articles["articles"][index1]["description"].asString();
     std::string des2 = this->articles["articles"][index2]["description"].asString();
@@ -38,45 +52,75 @@ void Sport::populateModule(){
     std::string title2 = this->articles["articles"][index2]["title"].asString();
     std::string title3 = this->articles["articles"][index3]["title"].asString();
 
+    std::string author1 = this->articles["articles"][index1]["author"].asString();
+    std::string author2 = this->articles["articles"][index2]["author"].asString();
+    std::string author3 = this->articles["articles"][index3]["author"].asString();
+
+    std::string published1 = this->articles["articles"][index1]["publishedAt"].asString();
+    std::string published2 = this->articles["articles"][index2]["publishedAt"].asString();
+    std::string published3 = this->articles["articles"][index3]["publishedAt"].asString();
+
     des1 = format(des1, 100);
     des2 = format(des2, 100);
     des3 = format(des3, 100);
 
-    title1 = format(title1, 80);
-    title2 = format(title2, 80);
-    title3 = format(title3, 80);
+    title1 = format(title1, 100);
+    title2 = format(title2, 100);
+    title3 = format(title3, 100);
 
+    author1 = format(author1, 100);  
+    author2 = format(author2, 100);   
+    author3 = format(author3, 100);
 
-    this->vbox = Gtk::VBox();
+    published1 = format(published1, 100);   
+    published2 = format(published2, 100);   
+    published3 = format(published3, 100);   
+
+    if(title1.length() == 0){
+        title1 = "No Articles Found for That KeyWord!";
+        title2 = "No Articles Found for That KeyWord!";
+        title3 = "No Articles Found for That KeyWord!";
+    }
+
+    //initialize vertical box to display articles on top of one another
+    this->vboxMain = Gtk::VBox();
+
+    //remove the box currently in the frame that was inherited
     this->frame.remove();
-    this->frame.add(this->vbox);
+    //add the new box to the frame
+    this->frame.add(this->vboxMain);
 
-    this->display1 = Gtk::Label("Title: " + title1 + "\n"
-    "Written by " + this->articles["articles"][index1]["author"].asString() + "\n" +
-    "From: " + this->articles["articles"][index1]["source"]["name"].asString() + "\n" +
-    "Published at: " + this->articles["articles"][index1]["publishedAt"].asString() + "\n" +
-    "Description: " + des1 + "\n");
+    this->display1 = Gtk::Label("Title: \n" + title1 + "\n"
+    "Written by \n" + author1 + "\n" +
+    "From: \n" + this->articles["articles"][index1]["source"]["name"].asString() + "\n" +
+    "Published at: \n" + published1 + "\n" + "Description: \n" +
+    des1 + "\n");
 
-    this->display2 = Gtk::Label("Title: " + title2 + "\n"
-    "Written by " + this->articles["articles"][index2]["author"].asString() + "\n" +
-    "From: " + this->articles["articles"][index2]["source"]["name"].asString() + "\n" +
-    "Published at: " + this->articles["articles"][index2]["publishedAt"].asString() + "\n" +
-    "Description: " + des2 + "\n");
+    this->display2 = Gtk::Label("Title: \n" + title2 + "\n"
+    "Written by \n" + author2 + "\n" +
+    "From: \n" + this->articles["articles"][index2]["source"]["name"].asString() + "\n" +
+    "Published at: \n" + published2 + "\n" + "Description: \n" +
+    des2 + "\n");
 
-    this->display3 = Gtk::Label("Title: " + title3 + "\n"
-    "Written by " + this->articles["articles"][index3]["author"].asString() + "\n" +
-    "From: " + this->articles["articles"][index3]["source"]["name"].asString() + "\n" +
-    "Published at: " + this->articles["articles"][index3]["publishedAt"].asString() + "\n" +
-    "Description: " + des3 + "\n");
+    this->display3 = Gtk::Label("Title: \n" + title3 + "\n"
+    "Written by \n" + author3 + "\n" +
+    "From: \n" + this->articles["articles"][index3]["source"]["name"].asString() + "\n" +
+    "Published at: \n" + published3 + "\n" + "Description: \n" +
+    des3 + "\n");
     
     this->display1.set_justify(Gtk::JUSTIFY_LEFT);
     this->display2.set_justify(Gtk::JUSTIFY_LEFT);
     this->display3.set_justify(Gtk::JUSTIFY_LEFT);
 
+    // gtk_widget_set_halign (GTK_WIDGET(&display1), GTK_ALIGN_START);
+    // gtk_widget_set_halign (GTK_WIDGET(&display2), GTK_ALIGN_START);
+    // gtk_widget_set_halign (GTK_WIDGET(&display3), GTK_ALIGN_START);
 
-    this->vbox.pack_start(this->display1, Gtk::PACK_SHRINK,0);
-    this->vbox.pack_start(this->display2, Gtk::PACK_SHRINK,0);
-    this->vbox.pack_start(this->display3, Gtk::PACK_SHRINK,0);
+    //add the displays to the vertical box -- have a vertical box that holds a vertical box for each article so they align to the left
+
+    this->vboxMain.pack_start(this->display1, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->display2, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->display3, Gtk::PACK_SHRINK,0);
 
     std::cout << "Finished populating custom Module" << std::endl;
 }
@@ -136,17 +180,30 @@ static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, c
 
 std::string format(std::string des, int runLength){
     int charCount = 0;
-    for(int i = 0; des[i]; i++){
-        charCount++;
-        if(charCount > runLength && des[i] == ' '){
-            std::string temp1 = des.substr(0, i);
-            std::string temp2 = des.substr(i+1);
 
-            std::cout << temp1 << "\n";
-            std::cout << temp2 << "\n";
-
-            des = temp1 + "\n" + temp2;
-            charCount = 0;
+    if(des.length() < runLength){
+        std::cout << "here" << "\n";
+        for(int i = des.length(); i < runLength; i++){
+            des = des + " ";
+            std::cout << des.length() << "\n";
+        }
+    }
+    else{
+        for(int i = 0; i < des.length(); i++){
+            charCount++;
+            if(charCount > runLength){
+                if(des[i] == ' '){
+                    std::string temp1 = des.substr(0, i+1);
+                    std::string temp2 = des.substr(i+1);
+                    des = temp1 + "\n" + temp2;
+                }
+                else{
+                    std::string temp1 = des.substr(0, i);
+                    std::string temp2 = des.substr(i);
+                    des = temp1 + "-\n" + temp2;
+                }
+                charCount = 0;
+            }
         }
     }
 
