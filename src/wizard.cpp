@@ -8,6 +8,7 @@
 #include "modules/calendar.h"
 #include "modules/sport.h"
 #include "modules/newsModule.h"
+#include "modules/stocks.h"
 using namespace std;
 
 vector<unique_ptr<Module>> created_modules;
@@ -24,7 +25,7 @@ string lowercase(string& str) { transform(str.begin(), str.end(), str.begin(), :
  * Also allows for other actions such as 'help' and 'remove'
  */
 void Wizard::userSetup() {
-    vector<string> module_names = {"weather", "calendar", "sport", "news"};
+    vector<string> module_names = {"weather", "calendar", "sport", "news", "stocks"};
     bool done = false;
     bool exit = false;
 
@@ -57,6 +58,8 @@ void Wizard::userSetup() {
             setupModule("sport", 3, module_names);
         } else if (input == "news") {
             setupModule("news", 4, module_names);
+        } else if (input == "stocks") {
+            setupModule("stocks", 5, module_names);
         } else if (input == "exit") {
             exit = true;
             done = true;
@@ -119,6 +122,9 @@ void Wizard::setupModule(const string& module, int setup, vector<string>& module
                 case 4:
                     created_modules.emplace_back(setupNews(module));
                     break;
+                case 5:
+                    created_modules.emplace_back(setupStocks(module));
+                    break;
                 default:
                     break;
             }
@@ -152,6 +158,48 @@ unique_ptr<Module> Wizard::setupSport(string name) {
     getline(cin, sport);
     return unique_ptr<Module>(new Sport(lowercase(sport), name, 100, 50));
 }
+
+// Setup stocks
+unique_ptr<Module> Wizard::setupStocks(string name)
+{
+    // Set up a maximum of three stocks
+    cout << "You will be prompted to enter up to three (3) stocks.\n";
+
+    string temp_stock;
+    vector<string> stocks;
+
+    // Stock 1. Name may not be empty or "done"
+    cout << "Enter the stock you'd like to see (E.g. AAPL, AMZN, TSLA): ";
+    getline(cin, temp_stock);
+    if (lowercase(temp_stock) == "done" || lowercase(temp_stock) == "")
+    {
+        throw string("First stock name may not be empty. Module not created.\n");
+    }
+    stocks.push_back(lowercase(temp_stock));
+
+    // Stock 2
+    cout << "Enter the stock you'd like to see (E.g. AAPL, AMZN, TSLA) or \"done\": ";
+    getline(cin, temp_stock);
+    if (lowercase(temp_stock) == "done" || lowercase(temp_stock) == "")
+    {
+        // If "done", don't push anything else to "stocks". Instead, create the module and return
+        return unique_ptr<Module>(new Stocks(stocks, name, 100, 50));
+    }
+    stocks.push_back(lowercase(temp_stock));
+
+    // Stock 3
+    cout << "Enter the stock you'd like to see (E.g. AAPL, AMZN, TSLA) or \"done\": ";
+    getline(cin, temp_stock);
+    if (lowercase(temp_stock) == "done" || lowercase(temp_stock) == "")
+    {
+        return unique_ptr<Module>(new Stocks(stocks, name, 100, 50));
+    }
+    stocks.push_back(lowercase(temp_stock));
+
+    // Create module
+    return unique_ptr<Module>(new Stocks(stocks, name, 100, 50));
+}
+
 unique_ptr<Module> Wizard::setupNews(string name) {
     std::string filter;
     std::string searchString;
@@ -223,6 +271,7 @@ unique_ptr<Module> Wizard::setupNews(string name) {
   }
     return unique_ptr<Module>(new NewsModule(searchString, name, 100, 50));
 }
+
 // Accessor for the vector of all created modules
 vector<unique_ptr<Module>> & Wizard::getModules() {
     return created_modules;

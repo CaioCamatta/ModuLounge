@@ -21,6 +21,15 @@ int main(int argc, char *argv[])
     window.set_default_size(400, 400);
     window.set_border_width(30);
 
+    // Load master CSS (automatically applied to all children module)
+    auto css = Gtk::CssProvider::create();
+    if (not css->load_from_path("src/main.css"))
+    {
+        std::cerr << "Failed to load mainn css\n";
+        std::exit(1);
+    }
+    window.get_style_context()->add_provider_for_screen(Gdk::Screen::get_default(), css, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
     // Create grid to house all the Modules/Frames
     Gtk::Grid grid;
 
@@ -34,8 +43,10 @@ int main(int argc, char *argv[])
     wizard.userSetup();
     std::vector<std::unique_ptr<Module>> modules = move(wizard.getModules());
 
-    if (!modules.empty()) {
-        for (std::unique_ptr <Module> &i : modules) {
+    if (!modules.empty())
+    {
+        for (std::unique_ptr<Module> &i : modules)
+        {
             i->populateModule();
             grid.add(i->frame);
         }
