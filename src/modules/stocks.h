@@ -15,6 +15,7 @@ public:
         initializeStocks(stocks);
     };
     ~Stocks(){};
+    
     void populateModule(); // Add new stuff to the module.
 
     Json::Value fetchStock(std::string stock);

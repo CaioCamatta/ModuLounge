@@ -27,7 +27,6 @@ void Stocks::initializeStocks(vector<string> stocks)
     Json::Value data;
     for (vector<string>::iterator it = stocks.begin(); it != stocks.end(); ++it)
     {
-        cout << ' ' << *it << endl;
         data = fetchStock(*it);
 
         if (!data[0]["price"])
@@ -46,7 +45,6 @@ Json::Value Stocks::fetchStock(string stock)
 {
     const string API_KEY = "bffb7d7b619c5a34c6d9b31f9ee2e289";
     const string url = "https://financialmodelingprep.com/api/v3/profile/" + stock + "?apikey=" + API_KEY;
-    cout << url << endl;
 
     // Curl the data
     CURL *curl = curl_easy_init();
