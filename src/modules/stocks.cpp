@@ -96,20 +96,10 @@ void Stocks::populateModule()
         this->box.pack_start(*it, Gtk::PACK_SHRINK, 0);
     }
 
-    Glib::ustring data = ".bold {color: green;}";
-    auto css = Gtk::CssProvider::create();
-    if (not css->load_from_data(data))
-    {
-        cerr << "Failed to load css\n";
-        std::exit(1);
-    }
-
     this->currentTime = Gtk::Label("Test CSS");
     this->currentTime.get_style_context()->add_class("bold");
     cout << this->currentTime.get_style_context()->has_class("bold") << endl;
 
-    this->currentTime.get_style_context()->add_provider(css,
-                                                        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     this->box.pack_start(this->currentTime, Gtk::PACK_SHRINK, 0);
 
     std::cout << "Finished populating Stocks Module" << std::endl;
