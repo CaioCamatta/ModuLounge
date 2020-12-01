@@ -1,2 +1,32 @@
-window {background-color: #dfddf1;}
-.bold {font-weight: bold;}
+window {
+  background-color: #f5f7fa;
+}
+label {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16px;
+}
+box{
+  margin:20px
+}
+frame {
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2);
+  border: 0px solid rgba(0,0,0,0.4);
+  background-color: rgba(255,255,255,1);
+  border-radius: 5px;
+}
+frame > label {
+    margin-top: 6px;
+    margin-left: 6px;
+}
+
+.small-label{
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+}
+
+.stocks-box .stock-price{
+  padding-right: 40px;
+}
+.stocks-box{
+  margin-top: 13px;
+}

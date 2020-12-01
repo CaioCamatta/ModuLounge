@@ -84,6 +84,7 @@ void Stocks::populateModule()
 {
     // Use a vertical box for this module
     this->box.set_orientation(Gtk::ORIENTATION_VERTICAL);
+    this->box.get_style_context()->add_class("stocks-box");
 
     // Iterate through vector (only available this way in C++ 11 or greater)
     for (auto i = this->stocks.begin(); i != this->stocks.end(); ++i)
@@ -93,15 +94,15 @@ void Stocks::populateModule()
         boost::to_upper(*i);
 
         // Round price to two decimals
-        auto index = std::distance(this->stocks.begin(), i); 
+        auto index = std::distance(this->stocks.begin(), i);
         float price = this->stockInfo.at(index).get("price", 0).asFloat();
         stringstream stream;
         stream << fixed << setprecision(2) << price;
         string roundPrice = stream.str();
 
         // Show TICKER:price
-        temp_label->set_markup("<b>" + *i + ":</b> " + roundPrice);
-        temp_label->set_halign(Gtk::ALIGN_START);
+        temp_label->set_markup("<b>" + *i + "</b> " + "<big> $" + roundPrice + "</big>");
+        temp_label->get_style_context()->add_class("stock-price");
 
         this->box.pack_start(*(temp_label), Gtk::PACK_SHRINK, 3);
     }
@@ -110,7 +111,8 @@ void Stocks::populateModule()
     time_t now = time(0);
     string dt = ctime(&now);
     this->currentTime = Gtk::Label();
-    this->currentTime.set_markup("<small>Last updated " + dt.substr(11, 8) + "</small>");
+    this->currentTime.set_markup("Updated " + dt.substr(11, 8));
+    this->currentTime.get_style_context()->add_class("small-label");
     this->box.pack_start(currentTime, Gtk::PACK_SHRINK, 3);
 
     std::cout << " :: Done populating stocks module." << std::endl;
