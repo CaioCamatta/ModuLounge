@@ -26,10 +26,13 @@ To run the app, use `make`:
 - [Hello World example](https://developer.gnome.org/gtkmm-tutorial/stable/sec-helloworld.html.en)
 
 - [GTKMM Docs](https://www.gtkmm.org/en/documentation.shtml)
+
   - [Container Widgets (e.g. Boxes)](https://developer.gnome.org/gtkmm-tutorial/stable/chapter-container-widgets.html.en)
   - [Misc Widgets (e.g. text Labels)](https://developer.gnome.org/gtkmm-tutorial/stable/chapter-misc-widgets.html.en)
 
 - [GTK CSS Properties](https://developer.gnome.org/gtk3/stable/chap-css-properties.html)
+
+- [Pango Markup - Similar to HTML/CSS](https://developer.gnome.org/pygtk/stable/pango-markup-language.html)
 
 ## UI Structure
 
@@ -49,6 +52,7 @@ How do I create a module>
 - Under `src/modules`, you will create `yourModule.cpp` and `yourModule.h`. Use the `sampleModule` as reference. All modules we create inherit from `Module`, which is the parent class that conveniently creates (and sets up) a `Frame` and `Box` to be used by the children modules. Your custom module needs to be instantiated and configured in `main.cpp` (again, use the sample module as reference).
 
 ## Adding CSS
+
 `main.css` can be accessed by any widget in the entire application. Simple add your css class to `main.css`, e.g.
 
     .my-custom-css {color: red;}
@@ -57,4 +61,19 @@ Then add your class (`my-custom-css`) to your Widget, e.g.
 
     this->myWidget.get_style_context()->add_class("my-custom-css");
 
-You can also create separate CSS files (e.g. `stock.css`) and use them in your module. There is an example of how to use a separate css file under `sampleModule.cpp`. 
+You can also create separate CSS files (e.g. `stock.css`) and use them in your module. There is an example of how to use a separate css file under `sampleModule.cpp`.
+
+### An easier alternative (Pango)
+
+Instead of using css, you can also use [Pango](https://developer.gnome.org/pygtk/stable/pango-markup-language.html), which is similar to HTML & CSS. It allows you to overwrite, for example the text of a `Label`, e.g.
+Instead of
+
+    this->currentTime = Gtk::Label("Test");
+    this->currentTime.get_style_context()->add_class("italic"); // italic is defined in the css file
+
+You could have
+
+    this->currentTime = Gtk::Label();
+    this->currentTime.set_markup("<i>New test</i>");
+
+Where the later would be in italic.
