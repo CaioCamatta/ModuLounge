@@ -68,20 +68,21 @@ void Weather::populateModule()
 {
     cout << "Start populating custom Module" << std::endl;
 
-    this->box.set_size_request(200,100); // Set module size
+    this->box.set_size_request(300,200); // Set module size
 
     // Create text
     Gtk::Label* text = new Gtk::Label();
     text->set_markup(this->city + ", " + this->country + "\n<span size='xx-large'><b>" +
             to_string(this->temp) + "°C</b></span>\nFeels Like: <b>" + to_string(this->feels_like) + "°C</b>\n<i>" +
             this->desc + "</i>");
-    this->box.pack_start(*text, true, true);
+    this->box.pack_start(*text);
 
     // Create image (give error if image not found)
     try {
         Gtk::Image* img = Gtk::manage(new Gtk::Image(Gdk::Pixbuf::create_from_file("src/images/" +
                 this->icon.substr(0,2) + "d@2x.png")));
-        this->box.pack_start(*img);
+        img->get_style_context()->add_class("icon");
+        this->box.pack_end(*img);
     } catch (const Glib::FileError& ex) {
         cerr << ex.what() << endl;
     }
