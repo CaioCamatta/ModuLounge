@@ -1,6 +1,5 @@
 #include <gtkmm.h>
 #include <curl/curl.h>
-#include <jsoncpp/json/json.h>
 #include <string>
 #include <stdio.h>
 #include <iostream>
