@@ -13,8 +13,18 @@
  */
 class Sport : public Module{
     private:
+
+        struct article
+        {
+            public:
+            Gtk::Label title;
+            Gtk::Label author;
+            Gtk::Label source;
+            Gtk::Label published;
+            Gtk::Label description;
+        };
+
         void initializeSports(std::string sport, int refresh);
-        std::string format(std::string des, int runLength);
         Json::Value getSportsNews(std::string sport);
         // the sport/team specified by the user 
         std::string sport;
@@ -38,7 +48,7 @@ class Sport : public Module{
         void refresher(std::string sport);
 
         // widgets to display articles inside the frame 
-        Gtk::Label display1, display2, display3;
+        article art1, art2, art3;
         Gtk::VBox vboxMain;        
 };
 
