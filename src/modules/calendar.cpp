@@ -1,3 +1,4 @@
+/** @file calendar.cpp */
 #include <iostream>
 #include <ctime>
 #include <thread>
@@ -5,25 +6,31 @@
 #include "../module.h"
 using namespace std;
 
-string province;
-int month;
-int first;
-
-string days_names[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-string month_names[12] = {"January", "February", "March", "April", "May", "June", "July",
-                         "August", "September", "October", "November", "December"};
-
 // Set basic month information and retrieve holidays
+/**
+ * @brief Set the calendar info and other class variables
+ * Take the current time and find the month, date, and year. Calculate the day of the week which the
+ * first day of the month falls on, and calculate the number of days in the month.
+ * @param province The province or territory to check for stat holidays
+ */
 void Calendar::initializeCalendar(string province) {
     this->province = province;
+
+    // Get the current time
     time_t now = time(0);
     tm *local_now = localtime(&now);
+
+    // Find the details of the time
     this->year = local_now->tm_year + 1900;
     this->month = local_now->tm_mon;
     int day_of_week = local_now->tm_wday;
     this->current_date = local_now->tm_mday;
+
+    // Calculate the day of the week which the first day falls on
     this->first = (day_of_week - current_date + 1) % 7;
     this->first = first < 0 ? first + 7 : first;
+
+    // Calculate the length of the month
     int length;
     if (month == 1 && year % 4 == 0) {
         length = 29;
@@ -41,17 +48,26 @@ void Calendar::initializeCalendar(string province) {
     this->length = length;
 }
 
+/**
+ * @brief Destructor.
+ * Destroy the instance of the module
+ */
 Calendar::~Calendar() {
 
 }
 
 //  Based on the province or territory (in Canada) get the holidays for that month
+/**
+ * @brief Find the holidays based on the province
+ * Go through all the statutory holidays in the country, and add the date and name for each in the province in the current month.
+ * Some dates are calculated as the holidays are not linked to a number-date, but a weekday of the month.
+ * @return A vector of all the holidays for the month in the specified province
+ */
 map<int, string> Calendar::getHolidays() {
     map<int, string> holidays;
 
+    // Give the specified province/territory a integer value
     int area;
-
-    // give the specified province/territory a integer value
     if (province == "alberta" || province == "ab") {
         area = 1;
     } else if (province == "british columbia" || province == "bc") {
@@ -82,6 +98,7 @@ map<int, string> Calendar::getHolidays() {
         throw string("Invalid Province/Territory");
     }
 
+    // Go through all the months and for each, go through all the holidays and add the ones which are applicable
     switch (month) {
         case 0: {
             holidays.insert(pair<int, string>(1, "New Year's Day"));
@@ -199,32 +216,50 @@ map<int, string> Calendar::getHolidays() {
     }
 }
 
+/**
+ * @brief Create the UI of the module.
+ * Called after all the modules are configured, this function will draw out the information to be seen.
+ * This function uses GTK elements to display text which includes the month and year, and lists the dates and names
+ * of the month's holidays. It will also draw a grid used as the calendar itself which is dated, and highlights the current date
+ * along with marking the holidays. If the month spans over 5 weeks (> 5 rows), then some cells of the calendar will contain
+ * multiple dates
+ */
 void Calendar::populateModule()
 {
     cout << "Start populating custom Module" << std::endl;
 
+    string month_names[12] = {"January", "February", "March", "April", "May", "June", "July",
+                       "August", "September", "October", "November", "December"};
+
     this->box.set_size_request(300,200); // Set module size
 
-    Gtk::Grid* container = new Gtk::Grid();
+    Gtk::Grid* container = new Gtk::Grid(); // Grid for module layout
 
     // Create calendar
     Gtk::Grid* grid = new Gtk::Grid();
     grid->set_row_spacing(1);
     grid->set_column_spacing(1);
 
-    map<int, std::string> holidays = getHolidays();
+    map<int, std::string> holidays = getHolidays(); // Get the holidays
 
+    // Create the title
     Gtk::Label* title = new Gtk::Label();
     title->set_markup("<span size='large'><b>" + month_names[this->month] + ", " + to_string(this->year) + "</b></span>");
     title->set_padding(0, 2);
     container->attach(*title,0,0);
 
+    // Create each cell of the calendar
     int day = 1;
     for (int i = 0; day <= this->length && i < 5; i++) {
         for (int j = i == 0 ? this->first : 0; j < 7 && day <= this->length; j++) {
             if ((this->length >= 30 && day+7 == 30 && j == 0) || (this->length >= 31 && day+7 == 31 && (j == 0 || j == 1))) {
+                // The cell is double-dated to abolish a sixth column
+
                 Gtk::Box *cell = new Gtk::Box();
                 Gtk::Label *date = new Gtk::Label();
+                cell->set_size_request(25,20);
+
+                // Create date label (upper left of cell)
                 if (day == current_date || day+7 == current_date) {
                     if (day == current_date) {
                         date->set_markup("<span rise='1000' size='x-small'><b>" + to_string(day) +
@@ -236,6 +271,12 @@ void Calendar::populateModule()
                 } else {
                     date->set_markup("<span rise='1000' size='xx-small'>" + to_string(day) + "\n" + to_string(day+7) + "</span>");
                 }
+                date->set_xalign(0.1);
+                date->set_yalign(0.1);
+                date->set_padding(0, 0);
+                cell->pack_start(*date);
+
+                // Create holiday label if applicable
                 if (holidays.find(day) != holidays.end() || holidays.find(day+7) != holidays.end()) {
                     Gtk::Label *today = new Gtk::Label();
                     if (holidays.find(day+7) != holidays.end()) {
@@ -248,18 +289,18 @@ void Calendar::populateModule()
                     today->set_padding(0, 0);
                     cell->pack_end(*today);
                 }
-                date->set_xalign(0.1);
-                date->set_yalign(0.1);
-                date->set_padding(0, 0);
-                cell->pack_start(*date);
-                cell->set_size_request(25,20);
+
+                // Highlight the cell if it represents the current date
                 if (day == current_date || day+7 == current_date) {
                     cell->get_style_context()->add_class("calendar-cell-today");
                 } else {
                     cell->get_style_context()->add_class("calendar-cell");
                 }
+
+                // Add the cell to the table
                 grid->attach(*cell, j, i);
             } else {
+                // Repeat the above without use of double-dated checking and labelling
                 Gtk::Box *cell = new Gtk::Box();
                 Gtk::Label *date = new Gtk::Label();
                 if (day == current_date) {
@@ -293,10 +334,12 @@ void Calendar::populateModule()
     }
     container->attach(*grid,0,1);
 
-    // Create text
+    // Create holiday listing
     Gtk::Label* text = new Gtk::Label();
     string holiday_string = "";
     first = true;
+
+    // Go through the holidays and add them to a string
     for (auto const& x : holidays)
     {
         if (!first) {
@@ -315,15 +358,20 @@ void Calendar::populateModule()
         }
         holiday_string.append(x.second);
     }
+
+    // Set the string as a label
     text->set_markup(holiday_string);
     text->set_xalign(0);
     text->set_yalign(1);
     text->set_padding(0, 5);
 
+    // Add the label to the layout grid
     container->attach(*text,0,2);
 
+    // Centre the layout grid
     container->set_halign(Gtk::ALIGN_CENTER);
 
+    // Add the layout grid to the module
     this->box.pack_start(*container);
 
     cout << "Finished populating custom Module" << endl;
