@@ -8,17 +8,16 @@ is supposed to be inherited and expanded by the child modules*/
 Module::Module(std::string name, int width, int height)
 {
     this->name = name;
-    this->width = width; // Min Box width
-    this->height = height;// Min Box height
+    this->width = width;   // Min Box width
+    this->height = height; // Min Box height
 
     /* Setup Box to hold all our widgets*/
     this->box = Gtk::Box(); // Create Box to contain widgets (buttons, texts, etc)
-    this->box.set_border_width(15);
     this->box.set_size_request(width, height); // Set min width/height
-    this->box.set_homogeneous(true);
 
     /* Setup frame that wraps the Box */
     this->frame = Gtk::Frame();
+    name[0] = toupper(name[0]);
     this->frame.set_label(name);
     this->frame.set_shadow_type(Gtk::SHADOW_ETCHED_OUT); // Specify shadow type
     this->frame.set_border_width(10);
@@ -27,8 +26,8 @@ Module::Module(std::string name, int width, int height)
     std::cout << " :: Module added." << std::endl;
 }
 
-Module::~Module() {
-
+Module::~Module()
+{
 }
 
 int Module::getHeight()
@@ -41,6 +40,7 @@ int Module::getWidth()
     return this->width;
 }
 
-std::string Module::getName() {
+std::string Module::getName()
+{
     return this->name;
 }
