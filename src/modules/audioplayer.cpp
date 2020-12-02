@@ -20,32 +20,34 @@ void Audioplayer::audioThread(){
 }
 
 void Audioplayer::startMusic(){
+  while(true){
+    DIR *dir;
+    dirent *pdir;
+    char buf[PATH_MAX];
+    
+    //this->curSong = Gtk::Label();
+    getcwd(buf, sizeof(buf));
+    
+    string path = "/src/modules/audioFolder/" + this->genre + "/";
+    const char * folder = path.c_str();
 
-          DIR *dir;
-          dirent *pdir;
-          char buf[PATH_MAX];
-          
-          //this->curSong = Gtk::Label();
-          getcwd(buf, sizeof(buf));
-          
-         
-          strcat(buf, "/src/modules/audiosource/");
-          
-          dir = opendir(buf);
-          while ((pdir = readdir(dir)) != NULL){
-            strcat(buf,pdir->d_name);
+    strcat(buf, folder);
+    
+    dir = opendir(buf);
+    while ((pdir = readdir(dir)) != NULL){
+      strcat(buf,pdir->d_name);
 
-            this->curSong.set_markup(pdir->d_name);
+      this->curSong.set_markup(pdir->d_name);
 
-            const char *songfile = buf;
-            playmusic(songfile);
+      const char *songfile = buf;
+      playmusic(songfile);
 
-            getcwd(buf, sizeof(buf));
-            strcat(buf, "/src/modules/audiosource/");
-          }
+      getcwd(buf, sizeof(buf));
+      strcat(buf, folder);
+    }
 
-          closedir(dir);
-  
+    closedir(dir);
+  }
 }
 
 
