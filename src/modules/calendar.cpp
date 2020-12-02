@@ -246,7 +246,7 @@ void Calendar::populateModule()
     Gtk::Label* title = new Gtk::Label();
     title->set_markup("<span size='large'><b>" + month_names[this->month] + ", " + to_string(this->year) + "</b></span>");
     title->set_padding(0, 2);
-    container->attach(*title,0,0);
+    container->attach(*title,0,0,1,1);
 
     // Create each cell of the calendar
     int day = 1;
@@ -298,7 +298,7 @@ void Calendar::populateModule()
                 }
 
                 // Add the cell to the table
-                grid->attach(*cell, j, i);
+                grid->attach(*cell, j, i,1,1);
             } else {
                 // Repeat the above without use of double-dated checking and labelling
                 Gtk::Box *cell = new Gtk::Box();
@@ -326,13 +326,13 @@ void Calendar::populateModule()
                 } else {
                     cell->get_style_context()->add_class("calendar-cell");
                 }
-                grid->attach(*cell, j, i);
+                grid->attach(*cell, j, i,1,1);
             }
 
             day++;
         }
     }
-    container->attach(*grid,0,1);
+    container->attach(*grid,0,1,1,1);
 
     // Create holiday listing
     Gtk::Label* text = new Gtk::Label();
@@ -366,7 +366,7 @@ void Calendar::populateModule()
     text->set_padding(0, 5);
 
     // Add the label to the layout grid
-    container->attach(*text,0,2);
+    container->attach(*text,0,2,1,1);
 
     // Centre the layout grid
     container->set_halign(Gtk::ALIGN_CENTER);
