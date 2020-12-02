@@ -23,13 +23,9 @@ void Audioplayer::startMusic(){
           DIR *dir;
           dirent *pdir;
           
-         // dir=opendir("../src/modules/audiosource");
           char buf[PATH_MAX];
           
-          /*
-          char *directpath = realpath("/src/modules/audiosource/", buf);
-          cout << buf <<endl;
-          */
+         
           getcwd(buf, sizeof(buf));
           
          
