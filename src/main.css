@@ -27,6 +27,9 @@ frame > label {
 .stocks-box .stock-price{
   padding-right: 40px;
 }
+.stocks-box .small-label{
+  margin-top: 6px;
+}
 .stocks-box{
   margin-top: 13px;
 }
