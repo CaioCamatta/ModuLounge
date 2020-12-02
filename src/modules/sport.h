@@ -50,8 +50,8 @@ class Sport : public Module{
          */
         void refresher();
 
-        // widgets to display articles inside the frame 
-        article art1, art2, art3;
+        // widgets to hold an article
+        article art1;
         //main box to hold everything
         Gtk::VBox vboxMain;  
         // the sport/team specified by the user 
