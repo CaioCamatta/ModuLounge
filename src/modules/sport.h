@@ -13,7 +13,7 @@
  */
 class Sport : public Module{
     private:
-        /// struct article that holds all labels for an article to be displayed (labels are text widgets to be displayed)
+        // struct article that holds all labels for an article to be displayed (labels are text widgets to be displayed)
         struct article
         {
             public:
@@ -50,13 +50,13 @@ class Sport : public Module{
          */
         void refresher();
 
-        /// widgets to display articles inside the frame 
+        // widgets to display articles inside the frame 
         article art1, art2, art3;
-        ///main box to hold everything
+        //main box to hold everything
         Gtk::VBox vboxMain;  
-        /// the sport/team specified by the user 
+        // the sport/team specified by the user 
         std::string sport;
-        /// A json array of articles that are retreived from api
+        // A json array of articles that are retreived from api
         Json::Value articles;
 
     public:
