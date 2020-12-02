@@ -6,12 +6,13 @@
 #include <jsoncpp/json/json.h>
 #include <sstream>
 #include <ctime>
+#include <thread>
 #include <boost/algorithm/string.hpp>
 #include "stocks.h"
 using namespace std;
 
 // Constructor
-Stocks::Stocks(const vector<string> stocks, string name, int x, int y) : Module(name, x, y)
+Stocks::Stocks(const vector<string> stocks, string name, int width, int height) : Module(name, width, height)
 {
     this->stocks = stocks;
     initializeStocks(stocks);
@@ -42,10 +43,9 @@ void Stocks::initializeStocks(vector<string> stocks)
 
         if (!data[0]["price"])
         {
-            throw string("Stock ticker " + *it + " does not exist");
+            throw string("Stock ticker " + *it + " does not exist. Aborting module creation.");
         }
 
-        // Get price as float with 2 decimal points of precision
         stockInfo.push_back(data[0]);
     }
     this->stockInfo = stockInfo;
@@ -84,6 +84,7 @@ void Stocks::populateModule()
 {
     // Use a vertical box for this module
     this->box.set_orientation(Gtk::ORIENTATION_VERTICAL);
+    this->box.get_style_context()->add_class("stocks-box");
 
     // Iterate through vector (only available this way in C++ 11 or greater)
     for (auto i = this->stocks.begin(); i != this->stocks.end(); ++i)
@@ -93,15 +94,16 @@ void Stocks::populateModule()
         boost::to_upper(*i);
 
         // Round price to two decimals
-        float price = this->stockInfo.at(0).get("price", 0).asFloat();
+        auto index = std::distance(this->stocks.begin(), i);
+        float price = this->stockInfo.at(index).get("price", 0).asFloat();
         stringstream stream;
         stream << fixed << setprecision(2) << price;
         string roundPrice = stream.str();
 
         // Show TICKER:price
-        temp_label->set_markup("<b>" + *i + ":</b> " + roundPrice);
+        temp_label->set_markup("<b>" + *i + "</b> " + "<big> $" + roundPrice + "</big>");
+        temp_label->get_style_context()->add_class("stock-price");
         temp_label->set_halign(Gtk::ALIGN_START);
-        temp_label->get_style_context()->add_class("my-custom-yellow-color");
 
         this->box.pack_start(*(temp_label), Gtk::PACK_SHRINK, 3);
     }
@@ -109,9 +111,67 @@ void Stocks::populateModule()
     // Also show current date/time based on current system
     time_t now = time(0);
     string dt = ctime(&now);
-    this->currentTime = Gtk::Label();
-    this->currentTime.set_markup("<small>Last updated " + dt.substr(11, 8) + "</small>");
-    this->box.pack_start(currentTime, Gtk::PACK_SHRINK, 3);
+    auto currentTime = new Gtk::Label();
+    currentTime->set_markup("Updated " + dt.substr(11, 5));
+    currentTime->get_style_context()->add_class("small-label");
+    this->box.pack_start(*currentTime, Gtk::PACK_SHRINK, 3);
+
+    // Tell the refresher to update frequently
+    std::thread stockRefresherThread(&Stocks::refresher, this);
+    stockRefresherThread.detach();
 
     std::cout << " :: Done populating stocks module." << std::endl;
+}
+
+void Stocks::refresher()
+{
+    while (true)
+    {
+        std::this_thread::sleep_for(std::chrono::seconds(REFRESH_RATE));
+        Stocks::refreshPrices();
+    }
+}
+
+void Stocks::refreshPrices()
+{
+    Json::Value temp_data;
+
+    Glib::ListHandle<Gtk::Widget *> childList = this->box.get_children();
+    Glib::ListHandle<Gtk::Widget *>::iterator i = childList.begin();
+
+    for (vector<string>::iterator it = this->stocks.begin(); it != this->stocks.end(); ++it)
+    {
+        std::cout << " :: Updating stocks module." << std::endl;
+        temp_data = fetchStock(*it);
+
+        boost::to_upper(*it);
+
+        // Round price to two decimals
+        auto index = std::distance(this->stocks.begin(), it);
+        float price = temp_data[0]["price"].asFloat();
+        stringstream stream;
+        stream << fixed << setprecision(2) << price;
+        string roundPrice = stream.str();
+
+        // Show TICKER:price
+        auto temp_label = new Gtk::Label();
+        temp_label->set_markup("<b>" + *it + "</b> " + "<big> $" + roundPrice + "</big>");
+        temp_label->get_style_context()->add_class("stock-price");
+        temp_label->set_halign(Gtk::ALIGN_START);
+
+        this->box.remove(*(*i));
+        i++;
+        this->box.pack_start(*(temp_label), Gtk::PACK_SHRINK, 3);
+    }
+
+    // Also show current date/time based on current system
+    this->box.remove(*(*i));
+    time_t now = time(0);
+    string dt = ctime(&now);
+    auto currentTime = new Gtk::Label();
+    currentTime->set_markup("Updated " + dt.substr(11, 5));
+    currentTime->get_style_context()->add_class("small-label");
+    this->box.pack_start(*currentTime, Gtk::PACK_SHRINK, 3);
+
+    this->box.show_all_children();
 }

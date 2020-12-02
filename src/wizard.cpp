@@ -156,7 +156,7 @@ unique_ptr<Module> Wizard::setupSport(string name) {
     string sport;
     cout << "Enter the sport or team you would like to see articles for (E.g. basketball, football, tennis, LA Lakers...): ";
     getline(cin, sport);
-    return unique_ptr<Module>(new Sport(lowercase(sport), name, 100, 50));
+    return unique_ptr<Module>(new Sport(lowercase(sport), name, 300, 150));
 }
 
 // Setup stocks
