@@ -9,10 +9,11 @@ class Audioplayer: public Module{
 
     private:
         void startMusic();
+        int playmusic(const char *song);
         std::string getCurrentSong();
         std::string curSong;
     public:
-        Audioplayer(std::string songname, int x, int y) : Module(songname,x,y) {startMusic();};
+        Audioplayer(std::string name, int x, int y) : Module(name,x,y) {startMusic();};
         ~Audioplayer();
 
         void populateModule();

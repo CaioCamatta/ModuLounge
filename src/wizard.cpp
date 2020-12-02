@@ -8,6 +8,7 @@
 #include "modules/calendar.h"
 #include "modules/sport.h"
 #include "modules/newsModule.h"
+#include "modules/audioplayer.h"
 using namespace std;
 
 vector<unique_ptr<Module>> created_modules;
@@ -161,7 +162,7 @@ unique_ptr<Module> Wizard::setupNews(string name) {
     return unique_ptr<Module>(new NewsModule(name, 100, 50));
 }
 unique_ptr<Module> Wizard::setupMusic(string name) {
-    return unique_ptr<Module>(new audioplayer(name, 100, 50));
+    return unique_ptr<Module>(new Audioplayer(name, 100, 50));
 }
 // Accessor for the vector of all created modules
 vector<unique_ptr<Module>> & Wizard::getModules() {
