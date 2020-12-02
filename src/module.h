@@ -14,14 +14,16 @@
 */
 class Module
 {
+private:
+    int x;
+    int y;
 protected:
-    int width, height;
     std::string name;
     Gtk::Box box;
 
 public:
     /**
-    * Main constructor. Inherits from Module and initializes the stock prices. 
+    * Main constructor. Inherits from Module and initializes the stock prices.
     *  
     * @param name name of the module and frame in which it lives
     * @param width min requested width for the module
@@ -37,20 +39,36 @@ public:
     virtual ~Module() = 0;
 
     /**
-    * Returns the width of the module. 
+    * Returns the x-coordinate of the module.
     *  
-    * @return int corresponding to the module's width
-    * @brief Returns width of the module.
+    * @return int corresponding to the module's x-coordinate
+    * @brief Returns x-coordinate of the module.
     */
-    int getWidth();
+    int getX();
 
     /**
-    * Returns the height of the module. 
+    * Returns the y-coordinate of the module.
     *  
-    * @return int corresponding to the module's height
-    * @brief Returns height of the module.
+    * @return int corresponding to the module's y-coordinate
+    * @brief Returns y-coordinate of the module.
     */
-    int getHeight();
+    int getY();
+
+    /**
+    * Sets the x-coordinate of the module.
+    *
+    * @param x The desired x-coordinate
+    * @brief Sets x-coordinate of the module.
+    */
+    void setX(int x);
+
+    /**
+    * Sets the y-coordinate of the module.
+    *
+    * @param y The desired y-coordinate
+    * @brief Sets y-coordinate of the module.
+    */
+    void setY(int y);
 
     /**
     * Returns the name of the module. 

@@ -108,6 +108,69 @@ void Wizard::userSetup() {
     }
 }
 
+void Wizard::placeModules()
+{
+    string grid_setup[6] = {"1", "2", "3", "4", "5", "6"};
+    for (unique_ptr<Module>& x: created_modules) {
+        bool fail = true;
+        while (fail) {
+            cout << "+---+---+---+" << endl;
+            cout << "| " << grid_setup[0] << " | " << grid_setup[1] << " | " << grid_setup[2] << " |" << endl;
+            cout << "+---+---+---+" << endl;
+            cout << "| " << grid_setup[3] << " | " << grid_setup[4] << " | " << grid_setup[5] << " |" << endl;
+            cout << "+---+---+---+" << endl;
+            cout << "Position " << x->getName() << " module (specify spot in grid):" << endl;
+
+            string input;
+            cout << "-> ";
+            cin.clear();
+            fflush(stdin);
+            while (getline(cin, input)) {
+                if (input.empty()) {
+                    cout << "-> ";
+                } else {
+                    break;
+                }
+            }
+            lowercase(input);
+
+            if (input == "1" && grid_setup[0] == "1") {
+                x->setX(0);
+                x->setY(0);
+                fail = false;
+                grid_setup[0] = "#";
+            } else if (input == "2" && grid_setup[1] == "2") {
+                x->setX(1);
+                x->setY(0);
+                fail = false;
+                grid_setup[1] = "#";
+            } else if (input == "3" && grid_setup[2] == "3") {
+                x->setX(2);
+                x->setY(0);
+                fail = false;
+                grid_setup[2] = "#";
+            } else if (input == "4" && grid_setup[3] == "4") {
+                x->setX(0);
+                x->setY(1);
+                fail = false;
+                grid_setup[3] = "#";
+            } else if (input == "5" && grid_setup[4] == "5") {
+                x->setX(1);
+                x->setY(1);
+                fail = false;
+                grid_setup[4] = "#";
+            } else if (input == "6" && grid_setup[5] == "6") {
+                x->setX(2);
+                x->setY(1);
+                fail = false;
+                grid_setup[5] = "#";
+            } else {
+                cout << "INVALID INPUT" << endl;
+            }
+        }
+    }
+}
+
 // Setup the specified module by calling its specific setup function, adding the resulting Module to the vector
 void Wizard::setupModule(const string& module, int setup, vector<string>& module_names) {
     try {
