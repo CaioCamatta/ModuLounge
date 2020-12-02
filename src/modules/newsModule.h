@@ -80,8 +80,19 @@ public:
     */
     void populateModule();
 
+	 /**
+    * @param string used to search for news
+    * @return none
+    * @brief Used by a thread and calls refreshArticles every 20 seconds.
+    * Part of the process that check for new news while ModuLounge is running
+    */
     void refresher(std::string searchString);
 
+	 /**
+    * @param string used to search for news
+    * @return none
+    * @brief refresh search for news articles periodically, to see if new ones have been published
+    */
     void refreshArticles(std::string searchString);
 
     /// Member widgets:
