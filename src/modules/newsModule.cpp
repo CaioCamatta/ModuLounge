@@ -70,44 +70,58 @@ void NewsModule::populateModule()
 
     curl_easy_setopt(curlHandler, CURLOPT_WRITEDATA, (void *)&news);
 
-    /*connect to site and receive transfer, after transfer is received callback function is called */
+    ///connect to site and receive transfer, after transfer is received callback function is called
     code = curl_easy_perform(curlHandler);
 
-    /* Check for errors */
+    ///Check for errors
     if(code != CURLE_OK)
     {
         std::cout << "curl_easy_perform() failed\n";
         std::cout << curl_easy_strerror(code);
     }
-    //struct jsonNews newsToDisplay;
+
     saveJson(&newsToDisplay, news);
     std::cout << "Start populating custom Module" << std::endl;
 
-    // Create a button, with label of the source of news
-    this->button = Gtk::Button(newsToDisplay.source);
+    this->box = Gtk::VBox();
+    this->frame.remove();
+    this->frame.add(this->box);
 
-    // When the button receives the "clicked" signal, it will call the
-    // on_button_clicked() method defined below.
-    this->button.signal_clicked().connect(sigc::mem_fun(*this,
-                                                        &NewsModule::on_button_clicked));
+    /// Create a labels for the module
+    this->sourceLabel = Gtk::Label();
+    sourceLabel.set_markup("<b><u>" + newsToDisplay.source + "</u></b>");
+    sourceLabel.set_justify(Gtk::JUSTIFY_LEFT);
+    this->box.pack_start(this->sourceLabel, Gtk::PACK_SHRINK, 0);
 
-    // Add Button to our Box (the Box holds all the widgets of this Module)
-    // Shrink Widget to its size, add 0 padding
-    this->box.pack_start(button, Gtk::PACK_SHRINK,0);
+    this->titleLabel = Gtk::Label();
+    titleLabel.set_max_width_chars(40);
+    titleLabel.set_line_wrap(true);
+    titleLabel.set_markup(newsToDisplay.title);
+    titleLabel.set_justify(Gtk::JUSTIFY_LEFT);
+    this->box.pack_start(this->titleLabel, Gtk::PACK_SHRINK, 0);
 
-    std::cout << "Finished populating custom Module" << std::endl;
+    this->dateLabel = Gtk::Label();
+    dateLabel.set_max_width_chars(40);
+    dateLabel.set_line_wrap(true);
+    dateLabel.set_text("Date: " + newsToDisplay.date);
+    dateLabel.set_justify(Gtk::JUSTIFY_LEFT);
+    this->box.pack_start(this->dateLabel, Gtk::PACK_SHRINK, 0);
+
+    this->descLabel = Gtk::Label();
+    descLabel.set_max_width_chars(40);
+    descLabel.set_line_wrap(true);
+    descLabel.set_markup(newsToDisplay.description);
+    descLabel.set_justify(Gtk::JUSTIFY_LEFT);
+    this->box.pack_start(this->descLabel, Gtk::PACK_SHRINK, 0);
+
+    this->box.set_orientation(Gtk::ORIENTATION_VERTICAL);
+
+
+    std::cout << "Finished populating news module" << std::endl;
 
 
   }
 
   curl_easy_cleanup(curlHandler);
 
-}
-void NewsModule::on_button_clicked()
-{
-    std::cout << "News From " << newsToDisplay.source << std::endl;
-    std::cout << "Title: " << newsToDisplay.title << std::endl;
-    std::cout << "Date: " << newsToDisplay.date << std::endl;
-    std::cout << "Description: " << newsToDisplay.description << std::endl;
-    std::cout << "Content: " << newsToDisplay.content << std::endl;
 }

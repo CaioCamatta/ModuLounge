@@ -70,15 +70,9 @@ public:
     */
     void populateModule();
 
-    /**
-    * @param none
-    * @return none
-    * @brief Displays news source, content, description and date to the console.
-    */
-    void on_button_clicked();
-
-    // Member widgets:
-    Gtk::Button button, button2; // All of your widgets need to be data members
+    /// Member widgets:
+    Gtk::Label sourceLabel, titleLabel, dateLabel, descLabel, contentLabel;
+    Gtk::VBox box;
 };
 
 #endif // NEWSMODULE_H
