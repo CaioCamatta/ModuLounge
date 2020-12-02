@@ -9,6 +9,8 @@
 #include "modules/sport.h"
 #include "modules/newsModule.h"
 #include "modules/stocks.h"
+#include "modules/audioplayer.h"
+
 using namespace std;
 
 vector<unique_ptr<Module>> created_modules;
@@ -25,7 +27,7 @@ string lowercase(string& str) { transform(str.begin(), str.end(), str.begin(), :
  * Also allows for other actions such as 'help' and 'remove'
  */
 void Wizard::userSetup() {
-    vector<string> module_names = {"weather", "calendar", "sport", "news", "stocks"};
+    vector<string> module_names = {"weather", "calendar", "sport", "news", "stocks", "music"};
     bool done = false;
     bool exit = false;
 
@@ -60,7 +62,9 @@ void Wizard::userSetup() {
             setupModule("news", 4, module_names);
         } else if (input == "stocks") {
             setupModule("stocks", 5, module_names);
-        } else if (input == "exit") {
+        } else if (input == "music") {
+            setupModule("music", 6, module_names);
+        }else if (input == "exit") {
             exit = true;
             done = true;
         } else if (input == "done") { // End the wizard to continue the program
@@ -124,6 +128,9 @@ void Wizard::setupModule(const string& module, int setup, vector<string>& module
                     break;
                 case 5:
                     created_modules.emplace_back(setupStocks(module));
+                    break;
+                case 6:
+                    created_modules.emplace_back(setupMusic(module));
                     break;
                 default:
                     break;
@@ -198,6 +205,10 @@ unique_ptr<Module> Wizard::setupStocks(string name)
 
     // Create module
     return unique_ptr<Module>(new Stocks(stocks, name, 100, 50));
+}
+
+unique_ptr<Module> Wizard::setupMusic(string name) {
+    return unique_ptr<Module>(new Audioplayer(name, 100, 50));
 }
 
 unique_ptr<Module> Wizard::setupNews(string name) {
