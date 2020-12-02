@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <curl/curl.h>
 #include <cstdio>
-#include <json/json.h> // Use <json/json.h> on mac
+#include <jsoncpp/json/json.h> // Use <json/json.h> on mac
 #include <sstream>
 #include "weather.h"
 using namespace std;
