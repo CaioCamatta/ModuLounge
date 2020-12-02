@@ -51,36 +51,43 @@ void NewsModule::saveJson(jsonNews *jNews, newsData news)
 
 }
 
+void NewsModule::initializeNews(std::string searchString)
+{
+    CURL *curlHandler;
+    CURLcode code;
+    struct newsData news;
+    news.data = (char*)malloc(1); //temporary malloc
+    news.size = 0;
+
+    std::string newsString;
+
+    curlHandler = curl_easy_init();
+    if(curlHandler)
+    {
+      curl_easy_setopt(curlHandler, CURLOPT_URL, searchString.c_str());
+
+      curl_easy_setopt(curlHandler, CURLOPT_WRITEFUNCTION, saveData);
+
+      curl_easy_setopt(curlHandler, CURLOPT_WRITEDATA, (void *)&news);
+
+      ///connect to site and receive transfer, after transfer is received callback function is called
+      code = curl_easy_perform(curlHandler);
+
+      ///Check for errors
+      if(code != CURLE_OK)
+      {
+          std::cout << "curl_easy_perform() failed\n";
+          std::cout << curl_easy_strerror(code);
+      }
+
+      saveJson(&newsToDisplay, news);
+
+    }
+    curl_easy_cleanup(curlHandler);
+}
 void NewsModule::populateModule()
 {
-  CURL *curlHandler;
-  CURLcode code;
-  struct newsData news;
-  news.data = (char*)malloc(1); //temporary malloc
-  news.size = 0;
 
-  std::string newsString;
-
-  curlHandler = curl_easy_init();
-  if(curlHandler)
-  {
-    curl_easy_setopt(curlHandler, CURLOPT_URL, searchString.c_str());
-
-    curl_easy_setopt(curlHandler, CURLOPT_WRITEFUNCTION, saveData);
-
-    curl_easy_setopt(curlHandler, CURLOPT_WRITEDATA, (void *)&news);
-
-    ///connect to site and receive transfer, after transfer is received callback function is called
-    code = curl_easy_perform(curlHandler);
-
-    ///Check for errors
-    if(code != CURLE_OK)
-    {
-        std::cout << "curl_easy_perform() failed\n";
-        std::cout << curl_easy_strerror(code);
-    }
-
-    saveJson(&newsToDisplay, news);
     std::cout << "Start populating custom Module" << std::endl;
 
     this->box = Gtk::VBox();
@@ -116,12 +123,52 @@ void NewsModule::populateModule()
 
     this->box.set_orientation(Gtk::ORIENTATION_VERTICAL);
 
+    std::thread newsThread(&NewsModule::refresher, this, this->searchString);
+    newsThread.detach();
 
     std::cout << "Finished populating news module" << std::endl;
 
 
   }
 
-  curl_easy_cleanup(curlHandler);
+void NewsModule::refresher(std::string searchString){
+    while(true){
+        std::this_thread::sleep_for (std::chrono::seconds(20));
+        NewsModule::refreshArticles(searchString);
+    }
+}
+
+void NewsModule::refreshArticles(std::string searchString){
+    CURL *curlHandler;
+    CURLcode code;
+    struct newsData news;
+    news.data = (char*)malloc(1); //temporary malloc
+    news.size = 0;
+
+    std::string newsString;
+
+    curlHandler = curl_easy_init();
+    if(curlHandler)
+    {
+      curl_easy_setopt(curlHandler, CURLOPT_URL, searchString.c_str());
+
+      curl_easy_setopt(curlHandler, CURLOPT_WRITEFUNCTION, saveData);
+
+      curl_easy_setopt(curlHandler, CURLOPT_WRITEDATA, (void *)&news);
+
+      ///connect to site and receive transfer, after transfer is received callback function is called
+      code = curl_easy_perform(curlHandler);
+
+      ///Check for errors
+      if(code != CURLE_OK)
+      {
+          std::cout << "curl_easy_perform() failed\n";
+          std::cout << curl_easy_strerror(code);
+      }
+
+      saveJson(&newsToDisplay, news);
+
+    }
+    curl_easy_cleanup(curlHandler);
 
 }

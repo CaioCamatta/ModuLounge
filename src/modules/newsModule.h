@@ -8,6 +8,7 @@
 #include<jsoncpp/json/json.h>
 #include<exception>
 #include <gtkmm.h>
+#include <thread>
 #include "../module.h"
 /**
 * @class NewsModule
@@ -50,6 +51,13 @@ private:
     * Default values are provided if some values are missing
     */
     void saveJson(jsonNews *jNews, newsData news);
+
+    /**
+    * @param the string used to search for news
+    * @return none
+    * @brief Retrieves news based off of user specifications chosen prior.
+    */
+    void initializeNews(std::string searchString);
     std::string searchString;
     jsonNews newsToDisplay;
 
@@ -60,15 +68,21 @@ public:
     * @return none
     * @brief calls the default module constructor and sets the value of searchString, so that the news API can be searched
     */
-    NewsModule(std::string toSearchString, std::string name, int width, int height) : Module(name, width, height){this->searchString = toSearchString;};
+    NewsModule(std::string toSearchString, std::string name, int width, int height) : Module(name, width, height){
+        this->searchString = toSearchString;
+        initializeNews(searchString);
+    };
 
     /**
     * @param none
     * @return none
-    * @brief Retrieves news based off of user specifications chosen prior.
-    * Adds visual elements to the module that will be displayed on the screen
+    * @brief Adds visual elements to the module that will be displayed on the screen
     */
     void populateModule();
+
+    void refresher(std::string searchString);
+
+    void refreshArticles(std::string searchString);
 
     /// Member widgets:
     Gtk::Label sourceLabel, titleLabel, dateLabel, descLabel, contentLabel;
