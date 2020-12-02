@@ -2,7 +2,7 @@
 #define SPORT_H
 
 #include <gtkmm.h>
-#include <json/json.h>
+#include <jsoncpp/json/json.h>
 #include "../module.h"
 
 /**
