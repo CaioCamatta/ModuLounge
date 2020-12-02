@@ -212,7 +212,7 @@ unique_ptr<Module> Wizard::setupMusic(string name) {
     cout << "Enter the genre you would like to play (Rock, EDM, Pop, Classical): ";
     getline(cin, genre);
     genre = lowercase(genre);
-    while(genre.compare("rock") != 0 && genre.compare("edm") != 0  && genre.compare("rock") !=0 && genre.compare("classical") !=0){
+    while(genre.compare("rock") != 0 && genre.compare("edm") != 0  && genre.compare("pop") !=0 && genre.compare("classical") !=0){
         cout << "Please enter one of the options (Rock, EDM, Pop, Classical): ";
         getline(cin, genre);
         genre = lowercase(genre);
