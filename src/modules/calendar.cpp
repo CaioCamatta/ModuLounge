@@ -231,8 +231,6 @@ void Calendar::populateModule()
     string month_names[12] = {"January", "February", "March", "April", "May", "June", "July",
                        "August", "September", "October", "November", "December"};
 
-    this->box.set_size_request(300,200); // Set module size
-
     Gtk::Grid* container = new Gtk::Grid(); // Grid for module layout
 
     // Create calendar

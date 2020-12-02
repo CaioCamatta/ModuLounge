@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
 
     // Create grid to house all the Modules/Frames
     Gtk::Grid grid;
+    grid.set_halign(Gtk::ALIGN_CENTER);
 
     /*  This is how you add a module:
             1. Create the Module
@@ -51,6 +52,7 @@ int main(int argc, char *argv[])
 
     Wizard wizard = Wizard();
     wizard.userSetup();
+    wizard.placeModules();
     std::vector<std::unique_ptr<Module>> modules = move(wizard.getModules());
 
     if (!modules.empty())
@@ -58,7 +60,7 @@ int main(int argc, char *argv[])
         for (std::unique_ptr<Module> &i : modules)
         {
             i->populateModule();
-            grid.add(i->frame);
+            grid.attach(i->frame, i->getX(), i->getY());
         }
 
         /* Once everything all the Boxes, Buttons, etc have been created and linked,
