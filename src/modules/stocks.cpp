@@ -11,7 +11,7 @@
 using namespace std;
 
 // Constructor
-Stocks::Stocks(const vector<string> stocks, string name, int x, int y) : Module(name, x, y)
+Stocks::Stocks(const vector<string> stocks, string name, int width, int height) : Module(name, width, height)
 {
     this->stocks = stocks;
     initializeStocks(stocks);
@@ -103,6 +103,7 @@ void Stocks::populateModule()
         // Show TICKER:price
         temp_label->set_markup("<b>" + *i + "</b> " + "<big> $" + roundPrice + "</big>");
         temp_label->get_style_context()->add_class("stock-price");
+        temp_label->set_halign(Gtk::ALIGN_START);
 
         this->box.pack_start(*(temp_label), Gtk::PACK_SHRINK, 3);
     }
@@ -110,10 +111,10 @@ void Stocks::populateModule()
     // Also show current date/time based on current system
     time_t now = time(0);
     string dt = ctime(&now);
-    this->currentTime = Gtk::Label();
-    this->currentTime.set_markup("Updated " + dt.substr(11, 8));
-    this->currentTime.get_style_context()->add_class("small-label");
-    this->box.pack_start(currentTime, Gtk::PACK_SHRINK, 3);
+    auto currentTime = new Gtk::Label();
+    currentTime->set_markup("Updated " + dt.substr(11, 8));
+    currentTime->get_style_context()->add_class("small-label");
+    this->box.pack_start(*currentTime, Gtk::PACK_SHRINK, 3);
 
     std::cout << " :: Done populating stocks module." << std::endl;
 }
