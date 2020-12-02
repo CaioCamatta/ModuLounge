@@ -212,7 +212,7 @@ unique_ptr<Module> Wizard::setupWeather(string name) {
     string city;
     cout << "Enter the city (optional: add a country code, e.g. 'London, CA'): ";
     getline(cin, city);
-    return unique_ptr<Module>(new Weather(lowercase(city), name, 100, 50));
+    return unique_ptr<Module>(new Weather(lowercase(city), name, -1, -1));
 }
 
 // Setup the calendar module by taking some user input and creating the module
@@ -220,13 +220,13 @@ unique_ptr<Module> Wizard::setupCalendar(string name) {
     string prov;
     cout << "Enter the province/territory: ";
     getline(cin, prov);
-    return unique_ptr<Module>(new Calendar(lowercase(prov), name, 100, 100));
+    return unique_ptr<Module>(new Calendar(lowercase(prov), name, -1, -1));
 }
 unique_ptr<Module> Wizard::setupSport(string name) {
     string sport;
     cout << "Enter the sport or team you would like to see articles for (E.g. basketball, football, tennis, LA Lakers...): ";
     getline(cin, sport);
-    return unique_ptr<Module>(new Sport(lowercase(sport), name, 300, 150));
+    return unique_ptr<Module>(new Sport(lowercase(sport), name, -1, -1));
 }
 
 // Setup stocks
@@ -253,7 +253,7 @@ unique_ptr<Module> Wizard::setupStocks(string name)
     if (lowercase(temp_stock) == "done" || lowercase(temp_stock) == "")
     {
         // If "done", don't push anything else to "stocks". Instead, create the module and return
-        return unique_ptr<Module>(new Stocks(stocks, name, 100, 50));
+        return unique_ptr<Module>(new Stocks(stocks, name, -1, -1));
     }
     stocks.push_back(lowercase(temp_stock));
 
@@ -262,12 +262,12 @@ unique_ptr<Module> Wizard::setupStocks(string name)
     getline(cin, temp_stock);
     if (lowercase(temp_stock) == "done" || lowercase(temp_stock) == "")
     {
-        return unique_ptr<Module>(new Stocks(stocks, name, 100, 50));
+        return unique_ptr<Module>(new Stocks(stocks, name, -1, -1));
     }
     stocks.push_back(lowercase(temp_stock));
 
     // Create module
-    return unique_ptr<Module>(new Stocks(stocks, name, 100, 50));
+    return unique_ptr<Module>(new Stocks(stocks, name, -1, -1));
 }
 
 unique_ptr<Module> Wizard::setupMusic(string name) {
@@ -280,7 +280,7 @@ unique_ptr<Module> Wizard::setupMusic(string name) {
         getline(cin, genre);
         genre = lowercase(genre);
     }
-    return unique_ptr<Module>(new Audioplayer(genre, name, 100, 50));
+    return unique_ptr<Module>(new Audioplayer(genre, name, -1, -1));
 }
 
 unique_ptr<Module> Wizard::setupNews(string name) {
@@ -352,7 +352,7 @@ unique_ptr<Module> Wizard::setupNews(string name) {
       }
 
   }
-    return unique_ptr<Module>(new NewsModule(searchString, name, 100, 50));
+    return unique_ptr<Module>(new NewsModule(searchString, name, -1, -1));
 }
 
 // Accessor for the vector of all created modules
