@@ -34,7 +34,7 @@ void Sport::initializeSports(int refresh){
         this->art1.title.set_markup("<span size='large'><b>No Articles Could Be Found for this keyword!</b></span> \n");  
     }
     else{
-        int index1, index2, index3;
+        int index1;
         
         // pick a random article from the retreived list at random (select its index in the JSON)
         if(this->articles["articles"].size() >= 1){
