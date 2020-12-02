@@ -36,6 +36,7 @@ void Audioplayer::startMusic(){
             strcat(buf,pdir->d_name);
 
             this->curSong.set_markup(pdir->d_name);
+
             const char *songfile = buf;
             playmusic(songfile);
 
@@ -113,7 +114,8 @@ void Audioplayer::populateModule(){
     Audioplayer::audioThread();
     //this->box = Gtk::VBox();
     this->curSong = Gtk::Label();
-    
+    this->curSong.set_max_width_chars(40);
+    this->curSong.set_line_wrap(true);
 
     this->box.pack_start(this->curSong,Gtk::PACK_SHRINK,0);
     this->box.set_size_request(250,100);
