@@ -7,8 +7,6 @@
 #include "weather.h"
 using namespace std;
 
-Json::Value fetchWeather(string city);
-
 // writer for libcurl API call
 std::size_t Weather::writer(
         const char* in,
@@ -22,12 +20,17 @@ std::size_t Weather::writer(
 }
 
 // Display the weather of the specified city upon creation
-void Weather::initializeWeather(string city) {
-    Json::Value data = fetchWeather(city);
-    if (!data["name"]) {
+void Weather::getWeather(string location) {
+    Json::Value data = fetchWeather(location);
+    if (data["cod"].asString() == "404") {
         throw string("Location does not exist");
     }
-    cout << data["main"]["temp"].asString() << ", " << data["name"].asString() << ", " << data["sys"]["country"].asString() << endl;
+    this->temp = data["main"]["temp"].asInt();
+    this->feels_like = data["main"]["feels_like"].asInt();
+    this->city = data["name"].asString();
+    this->country = data["sys"]["country"].asString();
+    this->desc = data["weather"][0]["main"].asString();
+    this->icon = data["weather"][0]["icon"].asString();
 }
 
 Weather::~Weather() {
@@ -35,9 +38,9 @@ Weather::~Weather() {
 }
 
 // Call the OpenWeatherMap API and return it's results as a Json Value
-Json::Value fetchWeather(string city) {
+Json::Value Weather::fetchWeather(string location) {
     const string API_KEY = "44a9b4cb7355f31110fed676da845337";
-    const string url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + API_KEY;
+    const string url = "http://api.openweathermap.org/data/2.5/weather?q=" + location + "&units=metric&appid=" + API_KEY;
     CURL* curl = curl_easy_init();
     stringstream httpData;
 
@@ -63,30 +66,24 @@ Json::Value fetchWeather(string city) {
 
 void Weather::populateModule()
 {
-    std::cout << "Start populating custom Module" << std::endl;
+    cout << "Start populating custom Module" << std::endl;
 
-    // Create a button, with label "Press Me"
-    this->button = Gtk::Button("Button");
+    this->box.set_size_request(300,200); // Set module size
 
-    // When the button receives the "clicked" signal, it will call the
-    // on_button_clicked() method defined below.
-    this->button.signal_clicked().connect(sigc::mem_fun(*this,
-                                                        &Weather::on_button_clicked));
+    // Create text
+    Gtk::Label* text = new Gtk::Label();
+    text->set_markup(this->city + ", " + this->country + "\n<span size='xx-large'><b>" +
+            to_string(this->temp) + "°C</b></span>\nFeels Like: <b>" + to_string(this->feels_like) + "°C</b>\n<i>" +
+            this->desc + "</i>");
+    this->box.pack_start(*text);
 
-    // Add Button to our Box (the Box holds all the widgets of this Module)
-    // Shrink Widget to its size, add 0 padding
-    this->box.pack_start(button, Gtk::PACK_SHRINK,0);
-
-    // Create a second button to demonstrate how multiple widgets can be added to Box
-    this->button2 = Gtk::Button("Press Me 2");
-    this->button2.signal_clicked().connect(sigc::mem_fun(*this,
-                                                         &Weather::on_button_clicked));
-    this->box.pack_start(button2);
-
-    std::cout << "Finished populating custom Module" << std::endl;
-}
-
-void Weather::on_button_clicked()
-{
-    std::cout << "Button was pressed." << std::endl;
+    // Create image (give error if image not found)
+    try {
+        Gtk::Image* img = Gtk::manage(new Gtk::Image(Gdk::Pixbuf::create_from_file("src/images/" +
+                this->icon.substr(0,2) + "d@2x.png")));
+        img->get_style_context()->add_class("icon");
+        this->box.pack_end(*img);
+    } catch (const Glib::FileError& ex) {
+        cerr << ex.what() << endl;
+    }
 }

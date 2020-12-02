@@ -133,7 +133,7 @@ void Wizard::setupModule(const string& module, int setup, vector<string>& module
             cout << "Module already added" << endl;
         }
     } catch (string &e) {
-        cout << e << endl;
+        cerr << e << endl;
     }
 }
 
@@ -156,7 +156,7 @@ unique_ptr<Module> Wizard::setupSport(string name) {
     string sport;
     cout << "Enter the sport or team you would like to see articles for (E.g. basketball, football, tennis, LA Lakers...): ";
     getline(cin, sport);
-    return unique_ptr<Module>(new Sport(lowercase(sport), name, 100, 50));
+    return unique_ptr<Module>(new Sport(lowercase(sport), name, 300, 150));
 }
 
 // Setup stocks
@@ -271,6 +271,7 @@ unique_ptr<Module> Wizard::setupNews(string name) {
   }
     return unique_ptr<Module>(new NewsModule(searchString, name, 100, 50));
 }
+
 // Accessor for the vector of all created modules
 vector<unique_ptr<Module>> & Wizard::getModules() {
     return created_modules;
