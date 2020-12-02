@@ -56,6 +56,13 @@ void Sport::initializeSports(int refresh){
         if(author1.length() == 0){
             author1 = "Author N/A";
         }
+
+        // align all data to the left side of the page
+        this->art1.title.set_halign(Gtk::ALIGN_START);
+        this->art1.author.set_halign(Gtk::ALIGN_START);
+        this->art1.published.set_halign(Gtk::ALIGN_START);
+        this->art1.description.set_halign(Gtk::ALIGN_START);
+        this->art1.source.set_halign(Gtk::ALIGN_START);
         
         int max_width = 50;     //width of the articles
         // set up all three articles to be displayed (this is one) all three have the same format, some 'Pango' is used to style them with markup a bit better
@@ -86,19 +93,14 @@ void Sport::populateModule(){
     std::cout << "Start populating sport Module" << std::endl;
 
     // set up a vertical box
-    this->vboxMain = Gtk::VBox();    
+    this->vboxMain = Gtk::VBox();
+    this->vboxMain.get_style_context()->add_class("sports-box");    
     // remove whats originally in the main frame
     this->frame.remove();
     // add the vertical box we will be using
     this->frame.add(this->vboxMain);
 
     this->vboxMain.set_size_request(530,400);
-    // align all the articles to the left side of the page
-    this->art1.title.set_halign(Gtk::ALIGN_START);
-    this->art1.author.set_halign(Gtk::ALIGN_START);
-    this->art1.published.set_halign(Gtk::ALIGN_START);
-    this->art1.description.set_halign(Gtk::ALIGN_START);
-    this->art1.source.set_halign(Gtk::ALIGN_START);
 
     // add all the articles info to the box so that it is displayed
     this->vboxMain.pack_start(this->art1.title, Gtk::PACK_SHRINK,0);
