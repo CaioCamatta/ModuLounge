@@ -11,6 +11,9 @@ using namespace std;
 string curSong;
 struct dirent *files;
 
+void backgroundAudio(){
+  
+}
 
 void Audioplayer::startMusic(){
 
@@ -33,11 +36,8 @@ void Audioplayer::startMusic(){
           cout << buf <<endl;
 
   
-          dir = opendir("/home/dragon/Documents/group54/group54/src/modules/audiosource/");
-          do{
-            
-
-            pdir = readdir(dir);
+          dir = opendir(buf);
+          while ((pdir = readdir(dir)) != NULL){
             strcat(buf,pdir->d_name);
 
             const char *songfile = buf;
@@ -45,11 +45,8 @@ void Audioplayer::startMusic(){
 
             getcwd(buf, sizeof(buf));
             strcat(buf, "/src/modules/audiosource/");
+          }
 
-
-          }while (pdir != NULL);
-
-              
           closedir(dir);
   
 }
@@ -87,7 +84,7 @@ int Audioplayer::playmusic(const char *song)
     buffer = (unsigned char*) malloc(buffer_size * sizeof(unsigned char));
 
     /* open the file and get the decoding format */
-    mpg123_open(mh, "/home/dragon/Documents/group54/group54/src/modules/audiosource/AC Valhalla song(My Mother Told Me).mp3");
+    mpg123_open(mh, song);
     mpg123_getformat(mh, &rate, &channels, &encoding);
 
     /* set the output format and open the output device */
