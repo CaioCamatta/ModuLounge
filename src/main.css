@@ -1,2 +1,12 @@
 window {background-color: #dfddf1;}
 .bold {font-weight: bold;}
+.calendar-cell {
+    background-color: grey;
+    color:white;
+    border-radius:2px;
+}
+.calendar-cell-today {
+    background-color: #6565A0;
+    color:white;
+    border-radius:2px;
+}

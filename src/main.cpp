@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     auto css = Gtk::CssProvider::create();
     if (not css->load_from_path("src/main.css"))
     {
-        std::cerr << "Failed to load mainn css\n";
+        std::cerr << "Failed to load main css\n";
         std::exit(1);
     }
     window.get_style_context()->add_provider_for_screen(Gdk::Screen::get_default(), css, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
