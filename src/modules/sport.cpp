@@ -11,12 +11,152 @@
 void displayArticles(Json::Value articles);
 Json::Value getSportsNews(std::string sport);
 static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, char* out);
-Sport::~Sport(){};
-std::string format(std::string des, int runLength);
+void formatDate(std::string *date);
 
-void Sport::initializeSports(std::string sport){
-   // if(sport != "basketball")
-    this->articles = getSportsNews(sport); //retrieve the articles  
+/**
+ * @brief Initialize sports setts 
+ * Detailed description: I feel as though a constructor is self explanatory
+ */
+void Sport::initializeSports(std::string sport, int refresh){
+   
+    this->articles = Sport::getSportsNews(sport); //retrieve the articles 
+
+    if(refresh == 0){
+        this->art1.title = Gtk::Label();
+        this->art2.title = Gtk::Label();
+        this->art3.title = Gtk::Label();
+
+        this->art1.author = Gtk::Label();
+        this->art2.author = Gtk::Label();
+        this->art3.author = Gtk::Label();
+
+        this->art1.source = Gtk::Label();
+        this->art2.source = Gtk::Label();
+        this->art3.source = Gtk::Label();
+
+        this->art1.published = Gtk::Label();
+        this->art2.published = Gtk::Label();
+        this->art3.published = Gtk::Label();
+
+        this->art1.description = Gtk::Label();
+        this->art2.description = Gtk::Label();
+        this->art3.description = Gtk::Label();  
+    }
+
+    if(this->articles["articles"].size() == 0){
+        this->art1.title.set_markup("<span size='large'><b>No Articles Could Be Found for this keyword!</b></span> \n");  
+    }
+    else{
+        int index1, index2, index3;
+        //select three different articles at random using an index number
+        if(this->articles["articles"].size() >= 1){
+            index1 = rand() % this->articles["articles"].size();
+            index2 = rand() % this->articles["articles"].size();
+            while(index2 == index1 && this->articles["articles"].size() >=2){
+                index2 = rand() % this->articles["articles"].size();
+            }
+            index3 = rand() % this->articles["articles"].size();
+            while(index3 == index2 || index3 == index1 && this->articles["articles"].size() >=3){
+                index3 = rand() % this->articles["articles"].size();
+            }
+        }
+        std::string des1 = this->articles["articles"][index1]["description"].asString();
+        std::string des2 = this->articles["articles"][index2]["description"].asString();
+        std::string des3 = this->articles["articles"][index3]["description"].asString();
+
+        std::string title1 = this->articles["articles"][index1]["title"].asString();
+        std::string title2 = this->articles["articles"][index2]["title"].asString();
+        std::string title3 = this->articles["articles"][index3]["title"].asString();
+
+        std::string author1 = this->articles["articles"][index1]["author"].asString();
+        std::string author2 = this->articles["articles"][index2]["author"].asString();
+        std::string author3 = this->articles["articles"][index3]["author"].asString();
+
+        std::string source1 = this->articles["articles"][index1]["source"]["name"].asString();
+        std::string source2 = this->articles["articles"][index2]["source"]["name"].asString();
+        std::string source3 = this->articles["articles"][index3]["source"]["name"].asString();
+
+        std::string published1 = this->articles["articles"][index1]["publishedAt"].asString();
+        std::string published2 = this->articles["articles"][index2]["publishedAt"].asString();
+        std::string published3 = this->articles["articles"][index3]["publishedAt"].asString();
+
+        formatDate(&published1);
+        formatDate(&published2);
+        formatDate(&published3);
+
+        if(author1.length() == 0){
+            author1 = "Author N/A";
+        }
+        if(author2.length() == 0){
+            author2 = "Author N/A";
+        }
+        if(author3.length() == 0){
+            author3 = "Author N/A";
+        }
+        
+ 
+        this->art1.title.set_markup("<span size='large'><b>\n" + title1 + "</b></span>");
+        this->art1.title.set_max_width_chars(60);
+        this->art1.title.set_line_wrap(true);
+
+        this->art1.author.set_markup("<i>\n" + author1 + "</i>");
+        this->art1.author.set_max_width_chars(60);
+        this->art1.author.set_line_wrap(true);
+
+        this->art1.source.set_markup("----------------------\n" + source1);
+        this->art1.source.set_max_width_chars(60); //could cause problem with styleing
+        this->art1.source.set_line_wrap(true);
+
+        this->art1.published.set_markup("----------------------\n"+ published1);
+        this->art1.published.set_max_width_chars(60);
+        this->art1.published.set_line_wrap(true);
+
+        this->art1.description.set_markup("\n"+ des1);
+        this->art1.description.set_max_width_chars(60);
+        this->art1.description.set_line_wrap(true);
+
+//second
+        this->art2.title.set_markup("<span size='large'><b>\n" + title2 + "</b></span>");
+        this->art2.title.set_max_width_chars(60);
+        this->art2.title.set_line_wrap(true);
+
+        this->art2.author.set_markup("<i>\n" + author2 + "</i>");
+        this->art2.author.set_max_width_chars(60);
+        this->art2.author.set_line_wrap(true);
+
+        this->art2.source.set_markup("----------------------\n" + source2);
+        this->art2.source.set_max_width_chars(60); //could cause problem with styleing
+        this->art2.source.set_line_wrap(true);
+
+        this->art2.published.set_markup("----------------------\n"+ published2);
+        this->art2.published.set_max_width_chars(60);
+        this->art2.published.set_line_wrap(true);
+
+        this->art2.description.set_markup("\n"+ des2);
+        this->art2.description.set_max_width_chars(60);
+        this->art2.description.set_line_wrap(true);
+
+//third
+        this->art3.title.set_markup("<span size='large'><b>\n" + title3 + "</b></span>");
+        this->art3.title.set_max_width_chars(60);
+        this->art3.title.set_line_wrap(true);
+
+        this->art3.author.set_markup("<i>\n" + author3 + "</i>");
+        this->art3.author.set_max_width_chars(60);
+        this->art3.author.set_line_wrap(true);
+
+        this->art3.source.set_markup("----------------------\n" + source3);
+        this->art3.source.set_max_width_chars(60); //could cause problem with styleing
+        this->art3.source.set_line_wrap(true);
+
+        this->art3.published.set_markup("----------------------\n"+ published3);
+        this->art3.published.set_max_width_chars(60);
+        this->art3.published.set_line_wrap(true);
+
+        this->art3.description.set_markup("\n"+ des3);
+        this->art3.description.set_max_width_chars(60);
+        this->art3.description.set_line_wrap(true);
+    }
 }
 
 /* Creates custom widgets (like buttons) for the custom module.
@@ -24,30 +164,10 @@ This basically expands upon the parent Module. */
 void Sport::populateModule(){
     std::cout << "Start populating sport Module" << std::endl;
 
-    int index1, index2, index3;
+    //initialize vertical box to display articles on top of one another
+    this->vboxMain = Gtk::VBox();
 
-    index1 = 0;
-    index2 = ceil(this->articles["articles"].size()/2);
-    index3 = this->articles["articles"].size()-1;
-
-    std::string des1 = this->articles["articles"][index1]["description"].asString();
-    std::string des2 = this->articles["articles"][index2]["description"].asString();
-    std::string des3 = this->articles["articles"][index3]["description"].asString();
-
-    std::string title1 = this->articles["articles"][index1]["title"].asString();
-    std::string title2 = this->articles["articles"][index2]["title"].asString();
-    std::string title3 = this->articles["articles"][index3]["title"].asString();
-
-    des1 = format(des1, 100);
-    des2 = format(des2, 100);
-    des3 = format(des3, 100);
-
-    title1 = format(title1, 80);
-    title2 = format(title1, 80);
-    title3 = format(title1, 80);
-
-
-    this->vbox = Gtk::VBox();
+    //remove the box currently in the frame that was inherited
     this->frame.remove();
     this->frame.add(this->vbox);
 
@@ -73,27 +193,52 @@ void Sport::populateModule(){
     this->display2.set_justify(Gtk::JUSTIFY_LEFT);
     this->display3.set_justify(Gtk::JUSTIFY_LEFT);
 
+    this->art1.title.set_halign(Gtk::ALIGN_START);
+    this->art1.author.set_halign(Gtk::ALIGN_START);
+    this->art1.published.set_halign(Gtk::ALIGN_START);
+    this->art1.description.set_halign(Gtk::ALIGN_START);
+    this->art1.source.set_halign(Gtk::ALIGN_START);
+
+    this->art2.title.set_halign(Gtk::ALIGN_START);
+    this->art2.author.set_halign(Gtk::ALIGN_START);
+    this->art2.published.set_halign(Gtk::ALIGN_START);
+    this->art2.description.set_halign(Gtk::ALIGN_START);
+    this->art2.source.set_halign(Gtk::ALIGN_START);
+
+    this->art3.title.set_halign(Gtk::ALIGN_START);
+    this->art3.author.set_halign(Gtk::ALIGN_START);
+    this->art3.published.set_halign(Gtk::ALIGN_START);
+    this->art3.description.set_halign(Gtk::ALIGN_START);
+    this->art3.source.set_halign(Gtk::ALIGN_START);
+
+    this->vboxMain.pack_start(this->art1.title, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->art1.author, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->art1.source, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->art1.published, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->art1.description, Gtk::PACK_SHRINK,0);
+
+    this->vboxMain.pack_start(this->art2.title, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->art2.author, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->art2.source, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->art2.published, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->art2.description, Gtk::PACK_SHRINK,0);
+
+    this->vboxMain.pack_start(this->art3.title, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->art3.author, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->art3.source, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->art3.published, Gtk::PACK_SHRINK,0);
+    this->vboxMain.pack_start(this->art3.description, Gtk::PACK_SHRINK,0);
 
     this->vbox.pack_start(this->display1, Gtk::PACK_SHRINK,0);
     this->vbox.pack_start(this->display2, Gtk::PACK_SHRINK,0);
     this->vbox.pack_start(this->display3, Gtk::PACK_SHRINK,0);
 
     std::cout << "Finished populating custom Module" << std::endl;
+    
 }
 
-void displayArticles(Json::Value articles){
-    int size = articles["articles"].size();
-    for(int x = 0; x < size; x++){
-        std::cout << articles["articles"][x]["title"].asString() << "\n";
-        std::cout << "Written by " << articles["articles"][x]["author"].asString() << " from " << articles["articles"][x]["source"]["name"].asString() << "\n";
-        std::cout << "Published on " << articles["articles"][x]["publishedAt"].asString() << "\n";
-        std::cout << articles["articles"][x]["description"].asString() << "\n";
-        std::cout << "\n";
-    }
-}
 
-Json::Value getSportsNews(std::string sport){
-
+Json::Value Sport::getSportsNews(std::string sport){
     for(int x = 0; sport[x]; x++){
         if(sport[x] == ' '){
             sport[x] = '+';
@@ -134,21 +279,21 @@ static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, c
     return size * num;
 }
 
-std::string format(std::string des, int runLength){
-    int charCount = 0;
-    for(int i = 0; des[i]; i++){
-        charCount++;
-        if(charCount > runLength && des[i] == ' '){
-            std::string temp1 = des.substr(0, i);
-            std::string temp2 = des.substr(i+1);
-
-            std::cout << temp1 << "\n";
-            std::cout << temp2 << "\n";
-
-            des = temp1 + "\n" + temp2;
-            charCount = 0;
-        }
+void Sport::refresher(std::string sport){
+    while(true){
+        std::this_thread::sleep_for (std::chrono::seconds(20));
+        Sport::initializeSports(sport, 1);
     }
-
-    return des;
 }
+
+void formatDate(std::string *date){
+    if(date->length() != 0){
+        std::string temp = *date;
+        int i = 0;
+        while((int) temp[i] < 65){
+            i++;
+        }
+        *date = temp.substr(0, i);
+    }
+}
+
