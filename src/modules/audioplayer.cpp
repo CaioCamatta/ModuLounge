@@ -11,9 +11,7 @@ using namespace std;
 string curSong;
 struct dirent *files;
 
-void backgroundAudio(){
-  
-}
+
 
 void Audioplayer::startMusic(){
 
