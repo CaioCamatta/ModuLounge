@@ -1,12 +1,19 @@
+.calendar-cell {
+    background-color: grey;
+    color:white;
+    border-radius:2px;
+}
+.calendar-cell-today {
+    background-color: #6565A0;
+    color: white;
+    border-radius: 2px;
+}
 window {
   background-color: #f5f7fa;
 }
 label {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 16px;
-}
-box{
-  margin:20px
 }
 frame {
   box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2);
