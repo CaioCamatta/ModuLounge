@@ -9,18 +9,18 @@
 #include "sport.h"
 #include <math.h>
 
-/// Destructor definition
+// Destructor definition
 Sport::~Sport(){};
 
-/// function declarations - will have proper comments on their definitions farther down
+// function declarations - will have proper comments on their definitions farther down
 static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, char* out);
 void formatDate(std::string *date);
 
 void Sport::initializeSports(int refresh){
-    /// retreive the sports news as a JSON full of articles
+    // retreive the sports news as a JSON full of articles
     this->articles = Sport::getSportsNews();  
 
-    /// if the call isn't a refresh call, we must initialize all the labels that will eventually get filled with articles and displayed
+    // if the call isn't a refresh call, we must initialize all the labels that will eventually get filled with articles and displayed
     if(refresh == 0){
         this->art1.title = Gtk::Label();
         this->art2.title = Gtk::Label();
@@ -43,27 +43,27 @@ void Sport::initializeSports(int refresh){
         //this->art3.description = Gtk::Label();  
     }
 
-    /// if no articles were found, only set one label to display that information
+    // if no articles were found, only set one label to display that information
     if(this->articles["articles"].size() == 0){
         this->art1.title.set_markup("<span size='large'><b>No Articles Could Be Found for this keyword!</b></span> \n");  
     }
     else{
         int index1, index2, index3;
         
-        /// pick three articles from the retreived list at random (select their indexes in the JSON)
+        // pick three articles from the retreived list at random (select their indexes in the JSON)
         if(this->articles["articles"].size() >= 1){
-            /// set index one and two
+            // set index one and two
             index1 = rand() % this->articles["articles"].size();
             index2 = rand() % this->articles["articles"].size();
             while(index2 == index1 && this->articles["articles"].size() >=2){
                 index2 = rand() % this->articles["articles"].size();
             }
-            /// set index 3 (if its in use)
+            // set index 3 (if its in use)
             // index3 = rand() % this->articles["articles"].size();
             // while(index3 == index2 || index3 == index1 && this->articles["articles"].size() >=3){
             //     index3 = rand() % this->articles["articles"].size();
             // }
-            /// if less than or equal to 3 articles are found in the whole JSON, identical articles will just be displayed
+        // if less than or equal to 3 articles are found in the whole JSON, identical articles will just be displayed
         }
 
         /// convert the json data into strings to be used later
@@ -87,12 +87,12 @@ void Sport::initializeSports(int refresh){
         std::string published2 = this->articles["articles"][index2]["publishedAt"].asString();
         //std::string published3 = this->articles["articles"][index3]["publishedAt"].asString();
 
-        /// call function to trim the end off of the date indicating the minute that it was published (looks nicer)
+        // call function to trim the end off of the date indicating the minute that it was published (looks nicer)
         formatDate(&published1);
         formatDate(&published2);
         //formatDate(&published3);
 
-        /// some articles don't always have authors, so if they don't set a filler
+        // some articles don't always have authors, so if they don't set a filler
         if(author1.length() == 0){
             author1 = "Author N/A";
         }
@@ -104,7 +104,7 @@ void Sport::initializeSports(int refresh){
         // }
         
         int max_width = 70;     ///width of the articles
-        /// set up all three articles to be displayed (this is one) all three have the same format, some 'Pango' is used to style them with markup a bit better
+        // set up all three articles to be displayed (this is one) all three have the same format, some 'Pango' is used to style them with markup a bit better
         this->art1.title.set_markup("<span size=\"large\"><b>\n" + title1 + "</b></span>");
         this->art1.title.set_max_width_chars(max_width);
         this->art1.title.set_line_wrap(true);
@@ -125,7 +125,7 @@ void Sport::initializeSports(int refresh){
         this->art1.description.set_max_width_chars(max_width);
         this->art1.description.set_line_wrap(true);
 
-        /// second article
+        // second article
         this->art2.title.set_markup("<span size=\"large\"><b>\n" + title2 + "</b></span>");
         this->art2.title.set_max_width_chars(max_width);
         this->art2.title.set_line_wrap(true);
@@ -173,14 +173,14 @@ void Sport::initializeSports(int refresh){
 void Sport::populateModule(){
     std::cout << "Start populating sport Module" << std::endl;
 
-    /// set up a vertical box
+    // set up a vertical box
     this->vboxMain = Gtk::VBox();    
-    /// remove whats originally in the main frame
+    // remove whats originally in the main frame
     this->frame.remove();
-    /// add the vertical box we will be using
+    // add the vertical box we will be using
     this->frame.add(this->vboxMain);
 
-    /// align all the articles to the left side of the page
+    // align all the articles to the left side of the page
     this->art1.title.set_halign(Gtk::ALIGN_START);
     this->art1.author.set_halign(Gtk::ALIGN_START);
     this->art1.published.set_halign(Gtk::ALIGN_START);
@@ -200,7 +200,7 @@ void Sport::populateModule(){
     // this->art3.description.set_halign(Gtk::ALIGN_START);
     // this->art3.source.set_halign(Gtk::ALIGN_START);
 
-    /// add all the articles info to the box so that it is displayed
+    // add all the articles info to the box so that it is displayed
     this->vboxMain.pack_start(this->art1.title, Gtk::PACK_SHRINK,0);
     this->vboxMain.pack_start(this->art1.author, Gtk::PACK_SHRINK,0);
     this->vboxMain.pack_start(this->art1.source, Gtk::PACK_SHRINK,0);
@@ -220,7 +220,7 @@ void Sport::populateModule(){
     // this->vboxMain.pack_start(this->art3.published, Gtk::PACK_SHRINK,0);
     // this->vboxMain.pack_start(this->art3.description, Gtk::PACK_SHRINK,0);
 
-    /// create a thread that runs a timer in the background that refreshes the page when necessary
+    // create a thread that runs a timer in the background that refreshes the page when necessary
     std::thread sportThread(&Sport::refresher, this);
     sportThread.detach();
 
@@ -230,36 +230,36 @@ void Sport::populateModule(){
 
 
 Json::Value Sport::getSportsNews(){
-    /// replace spaces in the keyword to + signs so the url works
+    // replace spaces in the keyword to + signs so the url works
     for(int x = 0; this->sport[x]; x++){
         if(this->sport[x] == ' '){
             this->sport[x] = '+';
         }
     }
 
-    ///Two api keys in case one gets over used and stops working
-    ///78572ce08bad450c9a68185c8b7fc9c5
-    ///573cff74201a406692be1fd831a14588
+    //Two api keys in case one gets over used and stops working
+    //78572ce08bad450c9a68185c8b7fc9c5
+    //573cff74201a406692be1fd831a14588
 
-    /// url to retrieve information from using libcurl
+    // url to retrieve information from using libcurl
     const std::string APIKEY = "573cff74201a406692be1fd831a14588";
     const std::string URL = "http://newsapi.org/v2/everything?q=" + this->sport + "&language=en&sortBy=publishedAt&apiKey=" + APIKEY;
 
-    /// initialize curl 
+    // initialize curl 
     CURL* curl = curl_easy_init();
     if (curl) {
-        /// set up the curl url and other parameters
+        // set up the curl url and other parameters
         curl_easy_setopt(curl, CURLOPT_URL, URL.c_str());
         curl_easy_setopt(curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
            
-        /// set up a function to write the response to and a stringstream to write the response to
+        // set up a function to write the response to and a stringstream to write the response to
         std::stringstream response_string;
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
 
-        /// perform the curl
+        // perform the curl
         curl_easy_perform(curl);
         curl_easy_cleanup(curl);
        
@@ -267,7 +267,7 @@ Json::Value Sport::getSportsNews(){
         Json::CharReaderBuilder reader;
         std::string errs;
         
-        /// convert the data to a JSON so it can be easily parsed and manipulated
+        // convert the data to a JSON so it can be easily parsed and manipulated
         if(Json::parseFromStream(reader, response_string, &data, &errs)){
             return data;
         }
