@@ -12,6 +12,9 @@ First, Install GTKMM and other libraries required
     sudo apt-get install libjsoncpp-dev
     sudo apt-get install libcurl4 libcurl4-openssl-dev -y
     sudo apt-get install libboost-dev
+    sudo apt-get install libmpg123-dev
+    sudo apt-get install -y libao-dev
+
 
 To run the app, use `make`:
 
