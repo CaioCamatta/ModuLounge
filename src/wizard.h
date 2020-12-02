@@ -19,6 +19,7 @@ class Wizard {
         void removeModule(const std::string& module);
     public:
         void userSetup();
+        void placeModules();
         std::vector<std::unique_ptr<Module>> & getModules();
 };
 

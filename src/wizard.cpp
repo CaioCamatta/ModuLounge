@@ -108,6 +108,69 @@ void Wizard::userSetup() {
     }
 }
 
+void Wizard::placeModules()
+{
+    string grid_setup[6] = {"1", "2", "3", "4", "5", "6"};
+    for (unique_ptr<Module>& x: created_modules) {
+        bool fail = true;
+        while (fail) {
+            cout << "+---+---+---+" << endl;
+            cout << "| " << grid_setup[0] << " | " << grid_setup[1] << " | " << grid_setup[2] << " |" << endl;
+            cout << "+---+---+---+" << endl;
+            cout << "| " << grid_setup[3] << " | " << grid_setup[4] << " | " << grid_setup[5] << " |" << endl;
+            cout << "+---+---+---+" << endl;
+            cout << "Position " << x->getName() << " module (specify spot in grid):" << endl;
+
+            string input;
+            cout << "-> ";
+            cin.clear();
+            fflush(stdin);
+            while (getline(cin, input)) {
+                if (input.empty()) {
+                    cout << "-> ";
+                } else {
+                    break;
+                }
+            }
+            lowercase(input);
+
+            if (input == "1" && grid_setup[0] == "1") {
+                x->setX(0);
+                x->setY(0);
+                fail = false;
+                grid_setup[0] = "#";
+            } else if (input == "2" && grid_setup[1] == "2") {
+                x->setX(1);
+                x->setY(0);
+                fail = false;
+                grid_setup[1] = "#";
+            } else if (input == "3" && grid_setup[2] == "3") {
+                x->setX(2);
+                x->setY(0);
+                fail = false;
+                grid_setup[2] = "#";
+            } else if (input == "4" && grid_setup[3] == "4") {
+                x->setX(0);
+                x->setY(1);
+                fail = false;
+                grid_setup[3] = "#";
+            } else if (input == "5" && grid_setup[4] == "5") {
+                x->setX(1);
+                x->setY(1);
+                fail = false;
+                grid_setup[4] = "#";
+            } else if (input == "6" && grid_setup[5] == "6") {
+                x->setX(2);
+                x->setY(1);
+                fail = false;
+                grid_setup[5] = "#";
+            } else {
+                cout << "INVALID INPUT" << endl;
+            }
+        }
+    }
+}
+
 // Setup the specified module by calling its specific setup function, adding the resulting Module to the vector
 void Wizard::setupModule(const string& module, int setup, vector<string>& module_names) {
     try {
@@ -149,7 +212,7 @@ unique_ptr<Module> Wizard::setupWeather(string name) {
     string city;
     cout << "Enter the city (optional: add a country code, e.g. 'London, CA'): ";
     getline(cin, city);
-    return unique_ptr<Module>(new Weather(lowercase(city), name, 100, 50));
+    return unique_ptr<Module>(new Weather(lowercase(city), name, -1, -1));
 }
 
 // Setup the calendar module by taking some user input and creating the module
@@ -157,13 +220,13 @@ unique_ptr<Module> Wizard::setupCalendar(string name) {
     string prov;
     cout << "Enter the province/territory: ";
     getline(cin, prov);
-    return unique_ptr<Module>(new Calendar(lowercase(prov), name, 100, 100));
+    return unique_ptr<Module>(new Calendar(lowercase(prov), name, -1, -1));
 }
 unique_ptr<Module> Wizard::setupSport(string name) {
     string sport;
     cout << "Enter the sport or team you would like to see articles for (E.g. basketball, football, tennis, LA Lakers...): ";
     getline(cin, sport);
-    return unique_ptr<Module>(new Sport(lowercase(sport), name, 300, 150));
+    return unique_ptr<Module>(new Sport(lowercase(sport), name, -1, -1));
 }
 
 // Setup stocks
@@ -190,7 +253,7 @@ unique_ptr<Module> Wizard::setupStocks(string name)
     if (lowercase(temp_stock) == "done" || lowercase(temp_stock) == "")
     {
         // If "done", don't push anything else to "stocks". Instead, create the module and return
-        return unique_ptr<Module>(new Stocks(stocks, name, 100, 50));
+        return unique_ptr<Module>(new Stocks(stocks, name, -1, -1));
     }
     stocks.push_back(lowercase(temp_stock));
 
@@ -199,12 +262,12 @@ unique_ptr<Module> Wizard::setupStocks(string name)
     getline(cin, temp_stock);
     if (lowercase(temp_stock) == "done" || lowercase(temp_stock) == "")
     {
-        return unique_ptr<Module>(new Stocks(stocks, name, 100, 50));
+        return unique_ptr<Module>(new Stocks(stocks, name, -1, -1));
     }
     stocks.push_back(lowercase(temp_stock));
 
     // Create module
-    return unique_ptr<Module>(new Stocks(stocks, name, 100, 50));
+    return unique_ptr<Module>(new Stocks(stocks, name, -1, -1));
 }
 
 unique_ptr<Module> Wizard::setupMusic(string name) {
@@ -217,7 +280,7 @@ unique_ptr<Module> Wizard::setupMusic(string name) {
         getline(cin, genre);
         genre = lowercase(genre);
     }
-    return unique_ptr<Module>(new Audioplayer(genre, name, 100, 50));
+    return unique_ptr<Module>(new Audioplayer(genre, name, -1, -1));
 }
 
 unique_ptr<Module> Wizard::setupNews(string name) {
@@ -289,7 +352,7 @@ unique_ptr<Module> Wizard::setupNews(string name) {
       }
 
   }
-    return unique_ptr<Module>(new NewsModule(searchString, name, 100, 50));
+    return unique_ptr<Module>(new NewsModule(searchString, name, -1, -1));
 }
 
 // Accessor for the vector of all created modules

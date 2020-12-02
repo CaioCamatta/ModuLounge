@@ -5,15 +5,15 @@
 /* Initializes a module with nothing but a frame with a title and an empty box.
 This Module can be displayed on its own, but it doesn't have anything, and
 is supposed to be inherited and expanded by the child modules*/
-Module::Module(std::string name, int width, int height)
+Module::Module(std::string name, int x, int y)
 {
     this->name = name;
-    this->width = width;   // Min Box width
-    this->height = height; // Min Box height
+    this->x = x;   // x-coordinate
+    this->y = y; // y-coordinate
 
     /* Setup Box to hold all our widgets*/
     this->box = Gtk::Box(); // Create Box to contain widgets (buttons, texts, etc)
-    this->box.set_size_request(width, height); // Set min width/height
+    this->box.set_size_request(530, 400); // Set min width/height
 
     /* Setup frame that wraps the Box */
     this->frame = Gtk::Frame();
@@ -30,14 +30,24 @@ Module::~Module()
 {
 }
 
-int Module::getHeight()
+int Module::getX()
 {
-    return this->height;
+    return this->x;
 }
 
-int Module::getWidth()
+int Module::getY()
 {
-    return this->width;
+    return this->y;
+}
+
+void Module::setX(int x)
+{
+    this->x = x;
+}
+
+void Module::setY(int y)
+{
+    this->y = y;
 }
 
 std::string Module::getName()

@@ -103,8 +103,6 @@ void Weather::populateModule()
 
     getWeather(); // Set the information needed
 
-    this->box.set_size_request(300,200); // Set module size
-
     // Create text
     this->data = Gtk::Label();
     this->data.set_markup(this->city + ", " + this->country + "\n<span size='xx-large'><b>" +

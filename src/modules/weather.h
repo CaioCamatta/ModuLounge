@@ -38,7 +38,10 @@ class Weather : public Module {
          * @param x The x-coordinate of the module.
          * @param y The y-coordinate of the module.
          */
-        Weather(const std::string& location, std::string name, int x, int y) : Module(name, x ,y) { this->location = location; };
+        Weather(const std::string& location, std::string name, int x, int y) : Module(name, x ,y) {
+            this->location = location;
+            getWeather();
+        };
         ~Weather();
         void populateModule();
 
