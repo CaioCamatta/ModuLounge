@@ -11,9 +11,9 @@ class Audioplayer: public Module{
         void startMusic();
         int playmusic(const char *song);
         std::string getCurrentSong();
-        std::string curSong;
+        Gtk::Label curSong;
     public:
-        Audioplayer(std::string name, int x, int y) : Module(name,x,y) {audioThread();};
+        Audioplayer(std::string name, int x, int y) : Module(name,x,y) {};
         ~Audioplayer();
 
         void populateModule();

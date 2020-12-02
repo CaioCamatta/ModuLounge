@@ -15,7 +15,6 @@ First, Install GTKMM and other libraries required
     sudo apt-get install libmpg123-dev
     sudo apt-get install -y libao-dev
 
-
 To run the app, use `make`:
 
     make

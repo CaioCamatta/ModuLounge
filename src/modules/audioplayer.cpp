@@ -10,7 +10,8 @@
 using namespace std;
 #define BITS 8
 
-string curSong;
+
+
 struct dirent *files;
 
 void Audioplayer::audioThread(){   
@@ -22,14 +23,9 @@ void Audioplayer::startMusic(){
 
           DIR *dir;
           dirent *pdir;
-          
-         // dir=opendir("../src/modules/audiosource");
           char buf[PATH_MAX];
           
-          /*
-          char *directpath = realpath("/src/modules/audiosource/", buf);
-          cout << buf <<endl;
-          */
+          //this->curSong = Gtk::Label();
           getcwd(buf, sizeof(buf));
           
          
@@ -38,6 +34,8 @@ void Audioplayer::startMusic(){
           dir = opendir(buf);
           while ((pdir = readdir(dir)) != NULL){
             strcat(buf,pdir->d_name);
+
+            this->curSong.set_markup(pdir->d_name);
 
             const char *songfile = buf;
             playmusic(songfile);
@@ -109,6 +107,17 @@ int Audioplayer::playmusic(const char *song)
 }
 
 
- void Audioplayer::populateModule(){
+void Audioplayer::populateModule(){
+
+    std::cout << "Playing Playlist" << std::endl;
+
+    Audioplayer::audioThread();
+    //this->box = Gtk::VBox();
+    this->curSong = Gtk::Label();
+    this->curSong.set_max_width_chars(40);
+    this->curSong.set_line_wrap(true);
+
+    this->box.pack_start(this->curSong,Gtk::PACK_SHRINK,0);
+    this->box.set_size_request(250,100);
 
 }
