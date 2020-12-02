@@ -28,8 +28,10 @@ void Audioplayer::startMusic(){
           //this->curSong = Gtk::Label();
           getcwd(buf, sizeof(buf));
           
-         
-          strcat(buf, "/src/modules/audiosource/");
+          string path = "/src/modules/audioFolder/" + this->genre + "/";
+          const char * folder = path.c_str();
+  
+          strcat(buf, folder);
           
           dir = opendir(buf);
           while ((pdir = readdir(dir)) != NULL){
@@ -41,7 +43,7 @@ void Audioplayer::startMusic(){
             playmusic(songfile);
 
             getcwd(buf, sizeof(buf));
-            strcat(buf, "/src/modules/audiosource/");
+            strcat(buf, folder);
           }
 
           closedir(dir);

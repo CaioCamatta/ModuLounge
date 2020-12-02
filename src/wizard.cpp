@@ -208,7 +208,16 @@ unique_ptr<Module> Wizard::setupStocks(string name)
 }
 
 unique_ptr<Module> Wizard::setupMusic(string name) {
-    return unique_ptr<Module>(new Audioplayer(name, 100, 50));
+    string genre;
+    cout << "Enter the genre you would like to play (Rock, EDM, Pop, Classical): ";
+    getline(cin, genre);
+    genre = lowercase(genre);
+    while(genre.compare("rock") != 0 && genre.compare("edm") != 0  && genre.compare("rock") !=0 && genre.compare("classical") !=0){
+        cout << "Please enter one of the options (Rock, EDM, Pop, Classical): ";
+        getline(cin, genre);
+        genre = lowercase(genre);
+    }
+    return unique_ptr<Module>(new Audioplayer(genre, name, 100, 50));
 }
 
 unique_ptr<Module> Wizard::setupNews(string name) {
