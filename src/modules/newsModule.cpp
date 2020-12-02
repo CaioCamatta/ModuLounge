@@ -42,6 +42,8 @@ void NewsModule::saveJson(jsonNews *jNews, newsData news)
         jNews->title = articles[1].get("title", "No Title").toStyledString();
         jNews->content = articles[1].get("content", "No Content").toStyledString();
 
+        jNews->source = jNews->source.substr(1, jNews->source.size() - 3); //remove quotes from source
+
     }
    catch (std::exception& e)
     {
