@@ -17,79 +17,83 @@ static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, c
  * @brief Initialize sports setts 
  * Detailed description: I feel as though a constructor is self explanatory
  */
-void Sport::initializeSports(std::string sport){
+void Sport::initializeSports(std::string sport, int refresh){
    
     this->articles = Sport::getSportsNews(sport); //retrieve the articles 
-    int index1, index2, index3;
-    //select three difference articles at random using an index number
-    if(this->articles["articles"].size() >= 1){
-        index1 = rand() % this->articles["articles"].size();
-        index2 = rand() % this->articles["articles"].size();
-        while(index2 == index1 && this->articles["articles"].size() >=2){
+
+    if(refresh == 0){
+        this->display1 = Gtk::Label();
+        this->display2 = Gtk::Label();
+        this->display3 = Gtk::Label();
+    }
+
+    if(this->articles["articles"].size() == 0){
+        this->display1.set_markup("<span size='large'><b>No Articles Could Be Found for this keyword!</b></span> \n");  
+    }
+    else{
+        int index1, index2, index3;
+        //select three difference articles at random using an index number
+        if(this->articles["articles"].size() >= 1){
+            index1 = rand() % this->articles["articles"].size();
             index2 = rand() % this->articles["articles"].size();
-        }
-        index3 = rand() % this->articles["articles"].size();
-        while(index3 == index2 || index3 == index1 && this->articles["articles"].size() >=3){
+            while(index2 == index1 && this->articles["articles"].size() >=2){
+                index2 = rand() % this->articles["articles"].size();
+            }
             index3 = rand() % this->articles["articles"].size();
+            while(index3 == index2 || index3 == index1 && this->articles["articles"].size() >=3){
+                index3 = rand() % this->articles["articles"].size();
+            }
         }
+        std::string des1 = this->articles["articles"][index1]["description"].asString();
+        std::string des2 = this->articles["articles"][index2]["description"].asString();
+        std::string des3 = this->articles["articles"][index3]["description"].asString();
+
+        std::string title1 = this->articles["articles"][index1]["title"].asString();
+        std::string title2 = this->articles["articles"][index2]["title"].asString();
+        std::string title3 = this->articles["articles"][index3]["title"].asString();
+
+        std::string author1 = this->articles["articles"][index1]["author"].asString();
+        std::string author2 = this->articles["articles"][index2]["author"].asString();
+        std::string author3 = this->articles["articles"][index3]["author"].asString();
+
+        std::string published1 = this->articles["articles"][index1]["publishedAt"].asString();
+        std::string published2 = this->articles["articles"][index2]["publishedAt"].asString();
+        std::string published3 = this->articles["articles"][index3]["publishedAt"].asString();
+
+        des1 = format(des1, 100);
+        des2 = format(des2, 100);
+        des3 = format(des3, 100);
+
+        title1 = format(title1, 70);
+        title2 = format(title2, 70);
+        title3 = format(title3, 70);
+
+        author1 = format(author1, 100);  
+        author2 = format(author2, 100);   
+        author3 = format(author3, 100);
+
+        published1 = format(published1, 100);   
+        published2 = format(published2, 100);   
+        published3 = format(published3, 100);   
+
+        this->display1.set_markup("<span size='large'><b>\n" + title1 + "</b></span> \n---------------------------\n"
+        "<b>Written by</b> \n" + author1 + "\n" +
+        "<b>From</b> \n" + this->articles["articles"][index1]["source"]["name"].asString() + "\n" +
+        "<b>Published at</b> \n" + published1 + "\n" + "<b>Description</b> \n" +
+        des1 + "\n");
+
+        this->display2.set_markup("<span size='large'><b>\n" + title2 + "</b></span> \n---------------------------\n"
+        "<b>Written by</b> \n" + author2 + "\n" +
+        "<b>From</b> \n" + this->articles["articles"][index2]["source"]["name"].asString() + "\n" +
+        "<b>Published at</b> \n" + published2 + "\n" + "<b>Description</b> \n" +
+        des2 + "\n");
+
+        this->display3.set_markup("<span size='large'><b>\n" + title3 + "</b></span> \n---------------------------\n"
+        "<b>Written by</b> \n" + author3 + "\n" +
+        "<b>From</b> \n" + this->articles["articles"][index3]["source"]["name"].asString() + "\n" +
+        "<b>Published at</b> \n" + published3 + "\n" + "<b>Description</b> \n" +
+        des3 + "\n");   
     }
-
-    std::string des1 = this->articles["articles"][index1]["description"].asString();
-    std::string des2 = this->articles["articles"][index2]["description"].asString();
-    std::string des3 = this->articles["articles"][index3]["description"].asString();
-
-    std::string title1 = this->articles["articles"][index1]["title"].asString();
-    std::string title2 = this->articles["articles"][index2]["title"].asString();
-    std::string title3 = this->articles["articles"][index3]["title"].asString();
-
-    std::string author1 = this->articles["articles"][index1]["author"].asString();
-    std::string author2 = this->articles["articles"][index2]["author"].asString();
-    std::string author3 = this->articles["articles"][index3]["author"].asString();
-
-    std::string published1 = this->articles["articles"][index1]["publishedAt"].asString();
-    std::string published2 = this->articles["articles"][index2]["publishedAt"].asString();
-    std::string published3 = this->articles["articles"][index3]["publishedAt"].asString();
-
-    if(title1.length() == 0){
-        title1 = "No Articles Found for That KeyWord!";
-        title2 = "No Articles Found for That KeyWord!";
-        title3 = "No Articles Found for That KeyWord!";
-    }
-
-    des1 = format(des1, 100);
-    des2 = format(des2, 100);
-    des3 = format(des3, 100);
-
-    title1 = format(title1, 100);
-    title2 = format(title2, 100);
-    title3 = format(title3, 100);
-
-    author1 = format(author1, 100);  
-    author2 = format(author2, 100);   
-    author3 = format(author3, 100);
-
-    published1 = format(published1, 100);   
-    published2 = format(published2, 100);   
-    published3 = format(published3, 100);   
-
-    this->display1 = Gtk::Label("Title: \n" + title1 + "\n"
-    "Written by \n" + author1 + "\n" +
-    "From: \n" + this->articles["articles"][index1]["source"]["name"].asString() + "\n" +
-    "Published at: \n" + published1 + "\n" + "Description: \n" +
-    des1 + "\n");
-
-    this->display2 = Gtk::Label("Title: \n" + title2 + "\n"
-    "Written by \n" + author2 + "\n" +
-    "From: \n" + this->articles["articles"][index2]["source"]["name"].asString() + "\n" +
-    "Published at: \n" + published2 + "\n" + "Description: \n" +
-    des2 + "\n");
-
-    this->display3 = Gtk::Label("Title: \n" + title3 + "\n"
-    "Written by \n" + author3 + "\n" +
-    "From: \n" + this->articles["articles"][index3]["source"]["name"].asString() + "\n" +
-    "Published at: \n" + published3 + "\n" + "Description: \n" +
-    des3 + "\n");
-    
 }
 
 /* Creates custom widgets (like buttons) for the custom module.
@@ -107,6 +111,10 @@ void Sport::populateModule(){
     //add the new box to the frame
     this->frame.add(this->vboxMain);
 
+    this->display1.set_halign(Gtk::ALIGN_START);
+    this->display2.set_halign(Gtk::ALIGN_START);
+    this->display3.set_halign(Gtk::ALIGN_START);
+
     this->vboxMain.pack_start(this->display1, Gtk::PACK_SHRINK,0);
     this->vboxMain.pack_start(this->display2, Gtk::PACK_SHRINK,0);
     this->vboxMain.pack_start(this->display3, Gtk::PACK_SHRINK,0);
@@ -117,19 +125,8 @@ void Sport::populateModule(){
     std::cout << "Finished populating custom Module" << std::endl;
 }
 
-void Sport::displayArticles(Json::Value articles){
-    int size = articles["articles"].size();
-    for(int x = 0; x < size; x++){
-        std::cout << articles["articles"][x]["title"].asString() << "\n";
-        std::cout << "Written by " << articles["articles"][x]["author"].asString() << " from " << articles["articles"][x]["source"]["name"].asString() << "\n";
-        std::cout << "Published on " << articles["articles"][x]["publishedAt"].asString() << "\n";
-        std::cout << articles["articles"][x]["description"].asString() << "\n";
-        std::cout << "\n";
-    }
-}
 
 Json::Value Sport::getSportsNews(std::string sport){
-
     for(int x = 0; sport[x]; x++){
         if(sport[x] == ' '){
             sport[x] = '+';
@@ -172,120 +169,29 @@ static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, c
 
 std::string Sport::format(std::string des, int runLength){
     int charCount = 0;
-
-    if(des.length() < runLength){
-        for(int i = des.length(); i < runLength; i++){
-            des = des + " ";
-        }
-    }
-    else{
-        for(int i = 0; i < des.length(); i++){
-            charCount++;
-            if(charCount > runLength){
-                if(des[i] == ' '){
-                    std::string temp1 = des.substr(0, i+1);
-                    std::string temp2 = des.substr(i+1);
-                    des = temp1 + "\n" + temp2;
-                }
-                else{
-                    std::string temp1 = des.substr(0, i);
-                    std::string temp2 = des.substr(i);
-                    des = temp1 + "-\n" + temp2;
-                }
-                charCount = 0;
+    for(int i = 0; i < des.length(); i++){
+        charCount++;
+        if(charCount > runLength){
+            if(des[i] == ' '){
+                std::string temp1 = des.substr(0, i+1);
+                std::string temp2 = des.substr(i+1);
+                des = temp1 + "\n" + temp2;
             }
+            else{
+                std::string temp1 = des.substr(0, i);
+                std::string temp2 = des.substr(i+1);
+                des = temp1 + "-\n" + temp2;
+            }
+            charCount = 0;
         }
     }
-
     return des;
 }
 
 void Sport::refresher(std::string sport){
     while(true){
         std::this_thread::sleep_for (std::chrono::seconds(20));
-        Sport::refreshArticles(sport);
+        Sport::initializeSports(sport, 1);
     }
 }
 
-void Sport::refreshArticles(std::string sport){
-
-    this->articles = Sport::getSportsNews(sport); //retrieve the articles 
-
-    int index1, index2, index3;
-    //select three difference articles at random using an index number
-    if(this->articles["articles"].size() >= 1){
-        index1 = rand() % this->articles["articles"].size();
-        index2 = rand() % this->articles["articles"].size();
-        while(index2 == index1 && this->articles["articles"].size() >=2){
-            index2 = rand() % this->articles["articles"].size();
-        }
-        index3 = rand() % this->articles["articles"].size();
-        while(index3 == index2 || index3 == index1 && this->articles["articles"].size() >=3){
-            index3 = rand() % this->articles["articles"].size();
-        }
-    }
-
-    std::string temp1;
-    std::string temp2;
-    std::string temp3;
-
-    std::string des1 = this->articles["articles"][index1]["description"].asString();
-    std::string des2 = this->articles["articles"][index2]["description"].asString();
-    std::string des3 = this->articles["articles"][index3]["description"].asString();
-
-    std::string title1 = this->articles["articles"][index1]["title"].asString();
-    std::string title2 = this->articles["articles"][index2]["title"].asString();
-    std::string title3 = this->articles["articles"][index3]["title"].asString();
-
-    std::string author1 = this->articles["articles"][index1]["author"].asString();
-    std::string author2 = this->articles["articles"][index2]["author"].asString();
-    std::string author3 = this->articles["articles"][index3]["author"].asString();
-
-    std::string published1 = this->articles["articles"][index1]["publishedAt"].asString();
-    std::string published2 = this->articles["articles"][index2]["publishedAt"].asString();
-    std::string published3 = this->articles["articles"][index3]["publishedAt"].asString();
-
-    if(title1.length() == 0){
-        title1 = "No Articles Found for That KeyWord!";
-        title2 = "No Articles Found for That KeyWord!";
-        title3 = "No Articles Found for That KeyWord!";
-    }
-
-    des1 = format(des1, 100);
-    des2 = format(des2, 100);
-    des3 = format(des3, 100);
-
-    title1 = format(title1, 100);
-    title2 = format(title2, 100);
-    title3 = format(title3, 100);
-
-    author1 = format(author1, 100);  
-    author2 = format(author2, 100);   
-    author3 = format(author3, 100);
-
-    published1 = format(published1, 100);   
-    published2 = format(published2, 100);   
-    published3 = format(published3, 100);   
-
-    temp1 = "Title: \n" + title1 + "\n"
-    "Written by \n" + author1 + "\n" +
-    "From: \n" + this->articles["articles"][index1]["source"]["name"].asString() + "\n" +
-    "Published at: \n" + published1 + "\n" + "Description: \n" +
-    des1 + "\n";
-
-    temp2 = "Title: \n" + title2 + "\n"
-    "Written by \n" + author2 + "\n" +
-    "From: \n" + this->articles["articles"][index2]["source"]["name"].asString() + "\n" +
-    "Published at: \n" + published2 + "\n" + "Description: \n" +
-    des2 + "\n";
-
-    temp3 = "Title: \n" + title3 + "\n"
-    "Written by \n" + author3 + "\n" +
-    "From: \n" + this->articles["articles"][index3]["source"]["name"].asString() + "\n" +
-    "Published at: \n" + published3 + "\n" + "Description: \n" +
-    des3 + "\n";
-
-    this->display1.set_label(temp1);
-    this->display2.set_label(temp2);
-    this->display3.set_label(temp3);
-}
