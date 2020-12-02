@@ -1,3 +1,4 @@
+/** @file main.cpp */
 #include <iostream>
 #include <gtkmm.h>
 #include <vector>
@@ -8,6 +9,15 @@
 #include "wizard.h"
 #include "modules/newsModule.h"
 
+/**
+* Main function. Creates Gtk application, loads global css, runs Wizard, 
+* adds modules to the screen.
+*  
+* @brief Main function
+* @param argc int argument containing the number arguments
+* @param argv list of command line arguments
+* @return integer 0 on exit success
+*/
 int main(int argc, char *argv[])
 {
 
