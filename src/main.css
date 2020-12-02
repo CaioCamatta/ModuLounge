@@ -40,3 +40,7 @@ frame > label {
 .stocks-box{
   margin-top: 13px;
 }
+
+.sports-box label{
+  padding-left: 20px;
+}
