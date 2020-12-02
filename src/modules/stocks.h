@@ -1,5 +1,7 @@
 #ifndef STOCKS_H
 #define STOCKS_H
+#ifndef REFRESH_RATE
+#define REFRESH_RATE 100
 
 #include <iostream>
 #include "../module.h"
@@ -76,6 +78,21 @@ public:
     * @brief Standard callback function called by libcurl when data is received
     */
     static std::size_t WriteCallback(const char *in, std::size_t size, std::size_t num, char *out);
+
+    /**
+    * Updates the stocks prices with current data. Replaces each Widget in this->box.
+    *  
+    * @brief Updates the stocks prices with current data 
+    */
+    void refreshPrices();
+
+    /**
+    * Runs refreshPrices every REFRESH_RATE seconds. 
+    *  
+    * @brief Runs refreshPrices() periodically
+    */
+    void refresher();
 };
 
 #endif //STOCKS_H
+#endif //REFRESH_RATE
