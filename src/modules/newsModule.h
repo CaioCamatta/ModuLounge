@@ -5,7 +5,7 @@
 #include <curl/curl.h>
 #include <string>
 #include <cstring>
-#include<jsoncpp/json/json.h>
+#include<json/json.h>
 #include<exception>
 #include <gtkmm.h>
 #include "../module.h"

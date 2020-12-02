@@ -2,7 +2,7 @@
 #define WEATHER_H
 
 #include <iostream>
-#include <jsoncpp/json/json.h> // Use <json/json.h> on mac
+#include <json/json.h> // Use <json/json.h> on mac
 #include "../module.h"
 
 class Weather : public Module {
