@@ -3,7 +3,6 @@
 #include <gtkmm.h>
 #include <vector>
 #include <memory>
-#include "modules/sampleModule.h"
 #include "modules/weather.h"
 #include "module.h"
 #include "wizard.h"
