@@ -6,13 +6,6 @@
 #include "../module.h"
 using namespace std;
 
-// Set basic month information and retrieve holidays
-/**
- * @brief Set the calendar info and other class variables
- * Take the current time and find the month, date, and year. Calculate the day of the week which the
- * first day of the month falls on, and calculate the number of days in the month.
- * @param province The province or territory to check for stat holidays
- */
 void Calendar::initializeCalendar(string province) {
     this->province = province;
 
@@ -48,21 +41,10 @@ void Calendar::initializeCalendar(string province) {
     this->length = length;
 }
 
-/**
- * @brief Destructor.
- * Destroy the instance of the module
- */
 Calendar::~Calendar() {
 
 }
 
-//  Based on the province or territory (in Canada) get the holidays for that month
-/**
- * @brief Find the holidays based on the province
- * Go through all the statutory holidays in the country, and add the date and name for each in the province in the current month.
- * Some dates are calculated as the holidays are not linked to a number-date, but a weekday of the month.
- * @return A vector of all the holidays for the month in the specified province
- */
 map<int, string> Calendar::getHolidays() {
     map<int, string> holidays;
 
@@ -216,14 +198,6 @@ map<int, string> Calendar::getHolidays() {
     }
 }
 
-/**
- * @brief Create the UI of the module.
- * Called after all the modules are configured, this function will draw out the information to be seen.
- * This function uses GTK elements to display text which includes the month and year, and lists the dates and names
- * of the month's holidays. It will also draw a grid used as the calendar itself which is dated, and highlights the current date
- * along with marking the holidays. If the month spans over 5 weeks (> 5 rows), then some cells of the calendar will contain
- * multiple dates
- */
 void Calendar::populateModule()
 {
     cout << "Start populating custom Module" << std::endl;
