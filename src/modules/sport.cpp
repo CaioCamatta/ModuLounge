@@ -95,8 +95,6 @@ void Sport::populateModule(){
     // add the vertical box we will be using
     this->frame.add(this->vboxMain);
 
-    this->vboxMain.set_size_request(530,400);
-
     // add all the articles info to the box so that it is displayed
     this->vboxMain.pack_start(this->art1.title, Gtk::PACK_SHRINK,0);
     this->vboxMain.pack_start(this->art1.author, Gtk::PACK_SHRINK,0);
