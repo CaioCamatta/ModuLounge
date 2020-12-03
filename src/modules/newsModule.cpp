@@ -124,6 +124,7 @@ void NewsModule::populateModule()
     this->box.pack_start(this->descLabel, Gtk::PACK_SHRINK, 0);
 
     this->box.set_orientation(Gtk::ORIENTATION_VERTICAL);
+    this->box.set_size_request(530,400);
 
     std::thread newsThread(&NewsModule::refresher, this, this->searchString);
     newsThread.detach();
