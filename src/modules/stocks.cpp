@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <curl/curl.h>
 #include <cstdio>
-#include <jsoncpp/json/json.h>
+#include <sjson/json.h>
 #include <sstream>
 #include <ctime>
 #include <thread>
