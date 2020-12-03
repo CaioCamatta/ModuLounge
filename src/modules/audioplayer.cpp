@@ -45,7 +45,8 @@ void Audioplayer::startMusic(){
       strcat(buf,pdir->d_name);
 
       // sets the Label widget's text to the current song's file name to display in the UI
-      this->curSong.set_markup(pdir->d_name);
+      string filename = pdir->d_name;
+      this->curSong.set_markup("<b>" + filename + "</b>");
       // converts the full path into a const char * to be played in the playmusic function
       const char *songfile = buf;
       playmusic(songfile);
