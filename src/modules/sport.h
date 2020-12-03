@@ -50,6 +50,14 @@ class Sport : public Module{
          */
         void refresher();
 
+        /**
+         * @brief formatDate takes in a date and substrings it so that only the day month year are in the text
+         * Detailed Description: loops through a string and finds the first letters, takes everything up to that letter so that the date only contains what
+         * we need and not extra data (looks cleaner). Uses a pointer so that it doesn't need to return anything (pass by reference)
+         * @param date: date to be formatted, it is a pointer so it is passed by reference and the function doesnt need to return anything.
+         */
+        void formatDate(std::string *date);
+
         // widgets to hold an article
         article art1;
         //main box to hold everything
@@ -84,7 +92,18 @@ class Sport : public Module{
          * Detailed description: populate module adds and aligns everything properly in a vertical box inside the sport module. Anything inside the vertical box
          * will be displayed, so populate module is actually populating the module for when the application runs.
          */
-        void populateModule();      
+        void populateModule();  
+
+        /**
+         * @brief WriteFunction simply handles the return of the libcurl, it is necessary for the libcurl to work, but we don't use it for anything else
+         * Detailed Description: It is necessary for the libcurl to work, it takes in the response_string and turns it into a stringstream output. 
+         * @param ptr: the response stream
+         * @param size: the size of the string stream
+         * @param num: number of streams
+         * @param out: the output stream
+         * @return size of the output stream
+         */
+        static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, char* out);    
 };
 
 #endif

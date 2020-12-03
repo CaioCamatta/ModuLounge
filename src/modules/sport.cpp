@@ -11,10 +11,6 @@
 // Destructor definition
 Sport::~Sport(){};
 
-// function declarations - will have proper comments on their definitions farther down
-static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, char* out);
-void formatDate(std::string *date);
-
 void Sport::initializeSports(int refresh){
     // retreive the sports news as a JSON full of articles
     this->articles = Sport::getSportsNews();  
@@ -49,7 +45,7 @@ void Sport::initializeSports(int refresh){
         std::string published1 = this->articles["articles"][index1]["publishedAt"].asString();
 
         // call function to trim the end off of the date indicating the minute that it was published (looks nicer)
-        formatDate(&published1);
+        Sport::formatDate(&published1);
 
         // some articles don't always have authors, so if they don't set a filler
         if(author1.length() == 0){
@@ -143,7 +139,7 @@ Json::Value Sport::getSportsNews(){
            
         // set up a function to write the response to and a stringstream to write the response to
         std::stringstream response_string;
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, Sport::writeFunction);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
 
         // perform the curl
@@ -162,16 +158,7 @@ Json::Value Sport::getSportsNews(){
     } 
 }
 
-/**
- * @brief WriteFunction simply handles the return of the libcurl, it is necessary for the libcurl to work, but we don't use it for anything else
- * Detailed Description: It is necessary for the libcurl to work, it takes in the response_string and turns it into a stringstream output. 
- * @param ptr: the response stream
- * @param size: the size of the string stream
- * @param num: number of streams
- * @param out: the output stream
- * @return size of the output stream
- */
-static std::size_t writeFunction(char *ptr, std::size_t size, std::size_t num, char* out) {
+std::size_t Sport::writeFunction(char *ptr, std::size_t size, std::size_t num, char* out) {
     std::string data (ptr, (std::size_t) size * num);
     *((std::stringstream*) out) << data;
     return size * num;
@@ -184,13 +171,7 @@ void Sport::refresher(){
     }
 }
 
-/**
- * @brief formatDate takes in a date and substrings it so that only the day month year are in the text
- * Detailed Description: loops through a string and finds the first letters, takes everything up to that letter so that the date only contains what
- * we need and not extra data (looks cleaner). Uses a pointer so that it doesn't need to return anything (pass by reference)
- * @param date: date to be formatted, it is a pointer so it is passed by reference and the function doesnt need to return anything.
- */
-void formatDate(std::string *date){
+void Sport::formatDate(std::string *date){
     if(date->length() != 0){
         std::string temp = *date;
         int i = 0;
