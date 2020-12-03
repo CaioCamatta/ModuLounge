@@ -74,14 +74,14 @@ void Weather::populateModule()
 
     // Create text
     this->data = Gtk::Label();
-    this->data.set_markup(this->city + ", " + this->country + "\n<span size='xx-large'><b>" +
-                     to_string(this->temp) + "°C</b></span>\nFeels Like: <b>" + to_string(this->feels_like) + "°C</b>\n<i>" +
-                     this->desc + "</i>\n\n");
+    this->data.set_markup("<span size='20000'>" + this->city + ", " + this->country + "</span>\n<span size='60000'><b>" +
+                     to_string(this->temp) + "°C</b></span>\n<span size='20000'>Feels Like: <b>" + to_string(this->feels_like) + "°C</b>\n<i>" +
+                     this->desc + "</i></span>\n\n");
     this->box.pack_start(this->data);
 
     // Create image (give error if image not found)
     try {
-        this->image = Gtk::Image(Gdk::Pixbuf::create_from_file("src/images/" + this->icon.substr(0,2) + "d@2x.png"));
+        this->image = Gtk::Image(Gdk::Pixbuf::create_from_file("src/images/" + this->icon.substr(0,2) + "d@2x.png", 200, 200));
         this->image.get_style_context()->add_class("icon");
         this->box.pack_end(this->image);
     } catch (const Glib::FileError& ex) {
@@ -106,13 +106,13 @@ void Weather::refresher() {
 void Weather::redraw()
 {
     // Redefine text
-    this->data.set_markup(this->city + ", " + this->country + "\n<span size='xx-large'><b>" +
-                     to_string(this->temp) + "°C</b></span>\nFeels Like: <b>" + to_string(this->feels_like) + "°C</b>\n<i>" +
-                     this->desc + "</i>\n\n");
+    this->data.set_markup("<span size='20000'>" + this->city + ", " + this->country + "</span>\n<span size='60000'><b>" +
+                     to_string(this->temp) + "°C</b></span>\n<span size='20000'>Feels Like: <b>" + to_string(this->feels_like) + "°C</b>\n<i>" +
+                     this->desc + "</i></span>\n\n");
 
     // Redefine image (give error if image not found)
     try {
-        this->image.set("src/images/" + this->icon.substr(0,2) + "d@2x.png");
+        this->image.set(Gdk::Pixbuf::create_from_file("src/images/" + this->icon.substr(0,2) + "d@2x.png", 200, 200));
     } catch (const Glib::FileError& ex) {
         cerr << ex.what() << endl;
     }

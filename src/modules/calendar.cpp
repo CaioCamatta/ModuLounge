@@ -39,6 +39,8 @@ void Calendar::initializeCalendar(string province) {
         length = 31;
     }
     this->length = length;
+
+    getHolidays();
 }
 
 Calendar::~Calendar() {
