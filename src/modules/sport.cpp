@@ -26,7 +26,10 @@ void Sport::initializeSports(int refresh){
 
     // if no articles were found, only set one label to display that information
     if(this->articles["articles"].size() == 0){
-        this->art1.title.set_markup("<span size='large'><b>No Articles Could Be Found for this keyword!</b></span> \n");  
+        this->art1.title.set_markup("<big><b>No Articles Could Be Found for this keyword!</b></big> \n");  
+        this->art1.title.set_halign(Gtk::ALIGN_START);
+        this->art1.title.set_max_width_chars(50);
+        this->art1.title.set_line_wrap(true);
     }
     else{
         int index1;
