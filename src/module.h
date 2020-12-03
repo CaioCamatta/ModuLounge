@@ -30,7 +30,7 @@ public:
     * @param height min requested height for the module
     * @brief Main constructor
     */
-    Module(std::string name, int width, int height);
+    Module(std::string name, int x, int y);
 
     /**
     * Main destructor.

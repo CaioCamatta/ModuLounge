@@ -8,16 +8,6 @@
 #include "weather.h"
 using namespace std;
 
-/**
- * @brief Writer for API call.
- * This function is used by the libcurl API call to write the data from the call.
- *
- * @param in The incoming data
- * @param size The size of a datum
- * @param num The number of data
- * @param out The output for the data
- * @return The write size of all the data
- */
 std::size_t Weather::writer(const char* in, size_t size, size_t num, char* out)
 {
     string data(in, (std::size_t) size * num);
@@ -25,11 +15,6 @@ std::size_t Weather::writer(const char* in, size_t size, size_t num, char* out)
     return size * num;
 }
 
-/**
- * @brief Sets the weather information.
- * Calls the fetchWeather function to call API. Goes through resulting JSON
- * and sets necessary class variables about the temperature.
- */
 void Weather::getWeather() {
     Json::Value data = fetchWeather(); // Do API call
 
@@ -47,20 +32,10 @@ void Weather::getWeather() {
     this->icon = data["weather"][0]["icon"].asString();
 }
 
-/**
- * @brief Destructor.
- * Destroys the instance.
- */
 Weather::~Weather() {
 
 }
 
-/**
- * @brief Fetch the weather from OpenWeather.
- * Using the specified location, call the OpenWeather API using libcurl. The location can be either a city
- * or a city followed by a comma and 2-character country code. Units for temperatures are specified to Celsius.
- * @return The JSON of all the data received from the libcurl API call
- */
 Json::Value Weather::fetchWeather() {
 
     // Setup API call address
@@ -91,12 +66,6 @@ Json::Value Weather::fetchWeather() {
     throw string("API call failed");
 }
 
-/**
- * @brief Create the UI of the module.
- * Called after all the modules are configured, this function will draw out the information to be seen.
- * This function uses GTK elements to display text which includes the temperature, location, 'feels-like,' and
- * weather description; along with an icon representing the weather. This function will finish by calling (by thread) the refresher.
- */
 void Weather::populateModule()
 {
     cout << "Start populating custom Module" << std::endl;
@@ -126,11 +95,6 @@ void Weather::populateModule()
     cout << "Finished populating custom Module" << endl;
 }
 
-/**
- * @brief Intermittently refresh the module display.
- * This function will re-get the weather then call the redraw function to draw the module
- * again with potentially updated information. It will do this every 20 seconds.
- */
 void Weather::refresher() {
     while(true){
         this_thread::sleep_for (chrono::seconds(20));
@@ -139,11 +103,6 @@ void Weather::refresher() {
     }
 }
 
-/**
- * @brief Redraw the module display.
- * Using the GTK elements defined in the populateModule method, update the text and icon to reflect
- * any data that has changed since the most recent API call.
- */
 void Weather::redraw()
 {
     // Redefine text

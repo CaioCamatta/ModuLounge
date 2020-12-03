@@ -7,7 +7,7 @@ This Module can be displayed on its own, but it doesn't have anything, and
 is supposed to be inherited and expanded by the child modules*/
 Module::Module(std::string name, int x, int y)
 {
-    this->name = name;
+    this->name = name; // name referred to by wizard
     this->x = x;   // x-coordinate
     this->y = y; // y-coordinate
 
