@@ -61,7 +61,7 @@ void Sport::initializeSports(int refresh){
         
         int max_width = 50;     //width of the articles
         // set up all three articles to be displayed (this is one) all three have the same format, some 'Pango' is used to style them with markup a bit better
-        this->art1.title.set_markup("<span size=\"large\"><b>\n" + title1 + "</b></span>");
+        this->art1.title.set_markup("<big><b>\n" + title1 + "</b></big>");
         this->art1.title.set_max_width_chars(max_width);
         this->art1.title.set_line_wrap(true);
 
