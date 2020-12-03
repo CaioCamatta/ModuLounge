@@ -22,6 +22,20 @@
 class NewsModule : public Module
 {
 private:
+	/**
+    *  @struct jsonNews
+ 	*  @brief This structure is used to store the relevant information gathered from the news API
+ 	*  @var jsonNews::description 
+ 	*  Description of top headline
+ 	*  @var jsonNews::date 
+	*  Date of top headline
+    *  @var jsonNews::source 
+	*  Source of top headline
+    *  @var jsonNews::title 
+	*  Title of top headline
+    *  @var jsonNews::content 
+	*  Content of top headline
+   	*/
     struct jsonNews
     {
         public:
@@ -31,6 +45,14 @@ private:
         std::string title;
         std::string content;
     };
+    /** 
+    *  @struct newsData
+ 	*  @brief This structure is used to store the relevant information gathered from the news API
+ 	*  @var newsData::data 
+ 	*  All the data retrieved from calling the news API. Stored in the form of a string.
+ 	*  @var newsData::size
+	*  The size of the data.
+   	*/
     struct newsData
     {
         public:

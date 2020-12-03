@@ -39,6 +39,8 @@ void Calendar::initializeCalendar(string province) {
         length = 31;
     }
     this->length = length;
+
+    getHolidays();
 }
 
 Calendar::~Calendar() {
@@ -216,8 +218,8 @@ void Calendar::populateModule()
 
     // Create the title
     Gtk::Label* title = new Gtk::Label();
-    title->set_markup("<span size='large'><b>" + month_names[this->month] + ", " + to_string(this->year) + "</b></span>");
-    title->set_padding(0, 2);
+    title->set_markup("<span size='xx-large'><b>" + month_names[this->month] + ", " + to_string(this->year) + "</b></span>");
+    title->set_padding(0, 10);
     container->attach(*title,0,0,1,1);
 
     // Create each cell of the calendar
@@ -229,19 +231,19 @@ void Calendar::populateModule()
 
                 Gtk::Box *cell = new Gtk::Box();
                 Gtk::Label *date = new Gtk::Label();
-                cell->set_size_request(25,20);
+                cell->set_size_request(55,50);
 
                 // Create date label (upper left of cell)
                 if (day == current_date || day+7 == current_date) {
                     if (day == current_date) {
-                        date->set_markup("<span rise='1000' size='x-small'><b>" + to_string(day) +
-                                         "</b></span>\n<span rise='1000' size='xx-small'>" + to_string(day+7) + "</span>");
+                        date->set_markup("<span rise='1000' size='medium'><b>" + to_string(day) +
+                                         "</b></span>\n<span rise='1000' size='small'>" + to_string(day+7) + "</span>");
                     } else {
-                        date->set_markup("<span rise='1000' size='xx-small'>" + to_string(day) +
-                                         "</span>\n<span rise='1000' size='x-small'><b>" + to_string(day+7) + "</b></span>");
+                        date->set_markup("<span rise='1000' size='small'>" + to_string(day) +
+                                         "</span>\n<span rise='1000' size='medium'><b>" + to_string(day+7) + "</b></span>");
                     }
                 } else {
-                    date->set_markup("<span rise='1000' size='xx-small'>" + to_string(day) + "\n" + to_string(day+7) + "</span>");
+                    date->set_markup("<span rise='1000' size='small'>" + to_string(day) + "\n" + to_string(day+7) + "</span>");
                 }
                 date->set_xalign(0.1);
                 date->set_yalign(0.1);
@@ -252,9 +254,9 @@ void Calendar::populateModule()
                 if (holidays.find(day) != holidays.end() || holidays.find(day+7) != holidays.end()) {
                     Gtk::Label *today = new Gtk::Label();
                     if (holidays.find(day+7) != holidays.end()) {
-                        today->set_markup("<span rise='-1000' size='x-small' foreground='#FFB0B0'><b>" + holidays.find(day+7)->second.substr(0,1) + "</b></span>");
+                        today->set_markup("<span rise='-1000' size='medium' foreground='#FFB0B0'><b>" + holidays.find(day+7)->second.substr(0,1) + "</b></span>");
                     } else {
-                        today->set_markup("<span rise='-1000' size='x-small' foreground='#FFB0B0'><b>" + holidays.find(day)->second.substr(0,1) + "</b></span>");
+                        today->set_markup("<span rise='-1000' size='medium' foreground='#FFB0B0'><b>" + holidays.find(day)->second.substr(0,1) + "</b></span>");
                     }
                     today->set_xalign(0.6);
                     today->set_yalign(0.9);
@@ -275,24 +277,27 @@ void Calendar::populateModule()
                 // Repeat the above without use of double-dated checking and labelling
                 Gtk::Box *cell = new Gtk::Box();
                 Gtk::Label *date = new Gtk::Label();
+                cell->set_size_request(55,50);
+
                 if (day == current_date) {
-                    date->set_markup("<span rise='1000' size='x-small'><b>" + to_string(day) + "</b></span>");
+                    date->set_markup("<span rise='1000' size='medium'><b>" + to_string(day) + "</b></span>");
                 } else {
-                    date->set_markup("<span rise='1000' size='xx-small'>" + to_string(day) + "</span>");
-                }
-                if (holidays.find(day) != holidays.end()) {
-                    Gtk::Label *today = new Gtk::Label();
-                    today->set_markup("<span rise='-1000' size='x-small' foreground='#FFB0B0'><b>" + holidays.find(day)->second.substr(0,1) + "</b></span>");
-                    today->set_xalign(0.6);
-                    today->set_yalign(0.9);
-                    today->set_padding(0, 0);
-                    cell->pack_end(*today);
+                    date->set_markup("<span rise='1000' size='small'>" + to_string(day) + "</span>");
                 }
                 date->set_xalign(0.1);
                 date->set_yalign(0.1);
                 date->set_padding(0, 0);
                 cell->pack_start(*date);
-                cell->set_size_request(25,20);
+
+                if (holidays.find(day) != holidays.end()) {
+                    Gtk::Label *today = new Gtk::Label();
+                    today->set_markup("<span rise='-1000' size='medium' foreground='#FFB0B0'><b>" + holidays.find(day)->second.substr(0,1) + "</b></span>");
+                    today->set_xalign(0.6);
+                    today->set_yalign(0.9);
+                    today->set_padding(0, 0);
+                    cell->pack_end(*today);
+                }
+
                 if (day == current_date) {
                     cell->get_style_context()->add_class("calendar-cell-today");
                 } else {
