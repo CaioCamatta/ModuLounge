@@ -92,6 +92,7 @@ void Sport::populateModule(){
 
     // set up a vertical box
     this->vboxMain = Gtk::VBox();
+  	this->vboxMain.set_size_request(530, 400);
     this->vboxMain.get_style_context()->add_class("sports-box");    
     // remove whats originally in the main frame
     this->frame.remove();
