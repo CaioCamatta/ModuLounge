@@ -103,7 +103,7 @@ void Stocks::populateModule()
         // Show TICKER:price
         temp_label->set_markup("<b>" + *i + "</b> " + "<big> $" + roundPrice + "</big>");
         temp_label->get_style_context()->add_class("stock-price");
-        temp_label->set_halign(Gtk::ALIGN_START);
+        temp_label->set_halign(Gtk::ALIGN_CENTER);
 
         this->box.pack_start(*(temp_label), Gtk::PACK_SHRINK, 3);
     }
@@ -157,7 +157,7 @@ void Stocks::refreshPrices()
         auto temp_label = new Gtk::Label();
         temp_label->set_markup("<b>" + *it + "</b> " + "<big> $" + roundPrice + "</big>");
         temp_label->get_style_context()->add_class("stock-price");
-        temp_label->set_halign(Gtk::ALIGN_START);
+        temp_label->set_halign(Gtk::ALIGN_CENTER);
 
         this->box.remove(*(*i));
         i++;

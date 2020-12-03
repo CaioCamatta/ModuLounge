@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
         for (std::unique_ptr<Module> &i : modules)
         {
             i->populateModule();
-            grid.attach(i->frame, i->getX(), i->getY());
+            grid.attach(i->frame, i->getX(), i->getY(), 1, 1);
         }
 
         /* Once everything all the Boxes, Buttons, etc have been created and linked,
