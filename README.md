@@ -43,6 +43,10 @@ To run the app, use `make`:
 
 - [Pango Markup - Similar to HTML/CSS](https://developer.gnome.org/pygtk/stable/pango-markup-language.html)
 
+## Class Diagram
+
+![Class Diagram](ModuLoungeClassDiagram.png)
+
 ## UI Structure
 
 This is the structure of the UI
